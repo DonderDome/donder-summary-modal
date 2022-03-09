@@ -2,7 +2,7 @@ import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } fr
 
 declare global {
   interface HTMLElementTagNameMap {
-    'jarvis-widget-template-editor': LovelaceCardEditor;
+    'jarvis-summary-modal-editor': LovelaceCardEditor;
     'hui-error-card': LovelaceCard;
   }
 }
@@ -18,4 +18,12 @@ export interface BoilerplateCardConfig extends LovelaceCardConfig {
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;
+}
+
+export interface Switch {
+  type: string,
+  name: string
+  entity_open?: string,
+  entity_close?: string,
+  entity?: string
 }
