@@ -70,7 +70,6 @@ export class BoilerplateCard extends LitElement {
     if (!this.config) {
       return false;
     }
-
     return this.hasConfigOrEntityChanged(this, changedProps, false);
   }
 
@@ -78,12 +77,12 @@ export class BoilerplateCard extends LitElement {
     if (changedProps.has('config') || forceUpdate) {
       return true;
     }
-  
+
     if (element.config!.switches) {
       const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
       if (oldHass) {
         let hasChanged = false
-        for (let i=0; i<element.config.switches.length-1; i--) {
+        for (let i=0; i<element.config.switches.length-1; i++) {
           const { entity, entity_close, entity_open } = element.config.switches[i]
           if (entity && oldHass.states[entity] !== element.hass!.states[entity]) {
             hasChanged = true
@@ -95,8 +94,8 @@ export class BoilerplateCard extends LitElement {
             hasChanged = true
             break
           }
-          return hasChanged
         }
+        return hasChanged
       }
       return true;
     } else {
@@ -129,15 +128,17 @@ export class BoilerplateCard extends LitElement {
     `;
   }
 
-  private activateTrigger(sw: Switch, action?: string) {
+  private activateTrigger(sw: Switch, isOpen?: string) {
     const { type, entity, entity_close, entity_open } = sw
+
     switch(type) {
       case "lights":
-        this.hass.callService('homeassistant', 'toggle', {entity_id: entity})
+        // this.hass.callService('homeassistant', 'toggle', {entity_id: entity})
         break
       case "shutters":
-        this.hass.callService('homeassistant', 'turn_off', {entity_id: action === 'close' ? entity_open : entity_close})
-        this.hass.callService('homeassistant', 'turn_on', {entity_id: action === 'close' ? entity_close : entity_open})
+        this.hass.callService('homeassistant', 'turn_off', {entity_id: isOpen === 'on' ? entity_open : entity_close})
+        this.hass.callService('homeassistant', 'turn_on', {entity_id: isOpen === 'on' ? entity_close : entity_open})
+        // this.hass.callService('input_boolean', 'turn_on', {entity_id: action === 'close' ? entity_close : entity_open})
         break
     }
   }
@@ -147,12 +148,14 @@ export class BoilerplateCard extends LitElement {
       .type-custom-jarvis-summary-modal {
         height: 100%;
         width: 100%;
+        font-family: "Rajdhani", sans-serif;
       }
       .jarvis-widget {
         height: 100%;
         width: 100%;
         padding: 20px;
         box-sizing: border-box;
+        color: #fff;
       }
       .summary-switch-wrapper {
         display: flex;
@@ -161,6 +164,8 @@ export class BoilerplateCard extends LitElement {
       }
       .summary-switch-name {
         padding-right: 30px;
+        padding-top: 5px;
+        opacity: .8;
       }
       .summary-switches {
         display: flex;
@@ -169,9 +174,32 @@ export class BoilerplateCard extends LitElement {
         justify-content: flex-end;
       }
       .summary-switch {
+        width: 30px;
+        color: #ccc;
+      }
+      .summary-switch.on {
         padding-left: 20px;
       }
+      .summary-switch.off {
+        transform: rotate(180deg);
+        position: relative;
+        top: -6px;
+      }
     `;
+  }
+
+  protected renderShutters(sw: Switch): any {
+    const isOpen = this.hass.states[sw.entity_open || ''].state
+
+    return isOpen === 'on'
+      ? html`
+        <div class='summary-switch on' @click="${() => this.activateTrigger(sw, isOpen)}">
+          <svg-item state='toggle-on'></svg-item>
+        </div>`
+      : html`
+        <div class='summary-switch off' @click="${() => this.activateTrigger(sw, isOpen)}">
+          <svg-item state='toggle-off'></svg-item>
+        </div>`
   }
 
   protected renderSwitch(sw: Switch): any {
@@ -180,14 +208,7 @@ export class BoilerplateCard extends LitElement {
         <div class='summary-switch-name'>${sw.name}</div>
         <div class='summary-switches'>
           ${sw.type === 'shutters'
-            ? html`
-              <div class='summary-switch' @click="${() => this.activateTrigger(sw, 'open')}">
-                Open: ${this.hass.states[sw.entity_open || ''].state}
-              </div>
-              <div class='summary-switch' @click="${() => this.activateTrigger(sw, 'close')}">
-                Close: ${this.hass.states[sw.entity_close || ''].state}
-              </div>
-              `
+            ? this.renderShutters(sw)
             : html`
             <div class='summary-switch' @click="${() => this.activateTrigger(sw)}">
               ${this.hass.states[sw.entity || ''].state}
