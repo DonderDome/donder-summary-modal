@@ -82,7 +82,7 @@ export class BoilerplateCard extends LitElement {
       const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
       if (oldHass) {
         let hasChanged = false
-        for (let i=0; i<element.config.switches.length-1; i++) {
+        for (let i=0; i<=element.config.switches.length-1; i++) {
           const { entity, entity_close, entity_open } = element.config.switches[i]
           if (entity && oldHass.states[entity] !== element.hass!.states[entity]) {
             hasChanged = true
@@ -129,16 +129,21 @@ export class BoilerplateCard extends LitElement {
   }
 
   private activateTrigger(sw: Switch, isOpen?: string) {
-    const { type, entity, entity_close, entity_open } = sw
-
+    const { type, entity, entity_close, entity_open, data } = sw
+    console.log(data)
     switch(type) {
+      case "boolean":
+        this.hass.callService('input_boolean', 'toggle', {entity_id: entity})
+        break
       case "lights":
-        // this.hass.callService('homeassistant', 'toggle', {entity_id: entity})
+        this.hass.callService('light', 'toggle', {entity_id: entity, ...data})
+        break
+      case "switch":
+        this.hass.callService('switch', 'toggle', {entity_id: entity})
         break
       case "shutters":
         this.hass.callService('homeassistant', 'turn_off', {entity_id: isOpen === 'on' ? entity_open : entity_close})
         this.hass.callService('homeassistant', 'turn_on', {entity_id: isOpen === 'on' ? entity_close : entity_open})
-        // this.hass.callService('input_boolean', 'turn_on', {entity_id: action === 'close' ? entity_close : entity_open})
         break
     }
   }
@@ -202,6 +207,20 @@ export class BoilerplateCard extends LitElement {
         </div>`
   }
 
+  protected renderToggle(sw: Switch): any {
+    const isOn = this.hass.states[sw.entity || ''].state
+
+    return isOn === 'on'
+      ? html`
+        <div class='summary-switch on' @click="${() => this.activateTrigger(sw, isOn)}">
+          <svg-item state='toggle-on'></svg-item>
+        </div>`
+      : html`
+        <div class='summary-switch off' @click="${() => this.activateTrigger(sw, isOn)}">
+          <svg-item state='toggle-off'></svg-item>
+        </div>`
+  }
+
   protected renderSwitch(sw: Switch): any {
     return html`
       <div class='summary-switch-wrapper'>
@@ -209,10 +228,11 @@ export class BoilerplateCard extends LitElement {
         <div class='summary-switches'>
           ${sw.type === 'shutters'
             ? this.renderShutters(sw)
-            : html`
-            <div class='summary-switch' @click="${() => this.activateTrigger(sw)}">
-              ${this.hass.states[sw.entity || ''].state}
-            </div>`
+            : this.renderToggle(sw)
+            // : html`
+            // <div class='summary-switch' @click="${() => this.activateTrigger(sw)}">
+            //   ${this.hass.states[sw.entity || ''].state}
+            // </div>`
           }
         </div>
       </div>

@@ -25,5 +25,6 @@ export interface Switch {
   name: string
   entity_open?: string,
   entity_close?: string,
-  entity?: string
+  entity?: string,
+  data: any
 }
