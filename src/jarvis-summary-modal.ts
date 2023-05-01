@@ -18,6 +18,7 @@ import {
 } from 'custom-card-helpers'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
 import { CARD_VERSION } from './constants';
 import './editor';
+import './range-slider';
 
 import type { BoilerplateCardConfig, Switch } from './types';
 import { actionHandler } from './action-handler-directive';
@@ -37,6 +38,7 @@ console.info(
 });
 
 export class BoilerplateCard extends LitElement {
+  
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     // REPLACE "jarvis-summary-modal" with widget name, everywhere in the project
     // REPLACE the file name with the actual widget name
@@ -49,6 +51,10 @@ export class BoilerplateCard extends LitElement {
 
   @property({ attribute: false }) public hass!: HomeAssistant;
   @state() private config!: BoilerplateCardConfig;
+  @state() protected _isOn = false;
+  @state() protected _currentPercentage = 0;
+  @state() protected _loop;
+  @state() protected _timeout;
 
   public setConfig(config: BoilerplateCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
@@ -130,7 +136,6 @@ export class BoilerplateCard extends LitElement {
 
   private activateTrigger(sw: Switch, isOpen?: string) {
     const { type, entity, entity_close, entity_open, data } = sw
-    console.log(data)
     switch(type) {
       case "boolean":
         this.hass.callService('input_boolean', 'toggle', {entity_id: entity})
@@ -139,6 +144,7 @@ export class BoilerplateCard extends LitElement {
         this.hass.callService('light', 'toggle', {entity_id: entity, ...data})
         break
       case "switch":
+        console.log(entity)
         this.hass.callService('switch', 'toggle', {entity_id: entity})
         break
       case "shutters":
@@ -177,6 +183,7 @@ export class BoilerplateCard extends LitElement {
         flex-direction: row;
         flex: 1;
         justify-content: flex-end;
+        align-items: end;
       }
       .summary-switch {
         width: 30px;
@@ -193,18 +200,85 @@ export class BoilerplateCard extends LitElement {
     `;
   }
 
-  protected renderShutters(sw: Switch): any {
-    const isOpen = this.hass.states[sw.entity_open || ''].state
+  protected stopShutters(): any {
+    // this.hass.callService('input_boolean', 'turn_off', {entity_id: 'input_boolean.livingroomshuttersstatus'})
+    clearInterval(this._loop)
+    this.hass.callService('homeassistant', 'turn_off', {entity_id: 'switch.living_room_shutters_open'})
+    this.hass.callService('homeassistant', 'turn_off', {entity_id:'switch.living_room_shutters_close'})
+  }
 
-    return isOpen === 'on'
-      ? html`
-        <div class='summary-switch on' @click="${() => this.activateTrigger(sw, isOpen)}">
-          <svg-item state='toggle-on'></svg-item>
-        </div>`
-      : html`
-        <div class='summary-switch off' @click="${() => this.activateTrigger(sw, isOpen)}">
-          <svg-item state='toggle-off'></svg-item>
-        </div>`
+  protected updateShutter(e: any): any {
+    const status = this._isOn 
+    const time = 26; // time of full cycle, let's make it 30 for full
+    const current = status ? this._currentPercentage : parseInt(this.hass.states['input_number.livingroomshutterspercentage'].state)
+    const [element] = e.composedPath();
+    const next = parseInt(element.value);
+    const delta = next - current
+    const close = delta < 0
+
+    if (delta === 0) {
+      return;
+    } else if (status){
+      // stop wtf we're doing
+      clearTimeout(this._timeout);
+      this.stopShutters();
+      
+    } else {
+      this._currentPercentage = current;
+    }
+    
+    const runtime = (Math.abs(delta) * time * 10)
+
+    // this.hass.callService('input_boolean', 'turn_on', {entity_id: 'input_boolean.livingroomshuttersstatus'})    
+    this._isOn = true
+
+    console.log(`triggered from ${current} to ${next}`, `delta: ${delta}`, `close: ${close}`);
+
+    // call shutter close/open
+    this.hass.callService('homeassistant', 'turn_off', {entity_id: close ? 'switch.living_room_shutters_open' : 'switch.living_room_shutters_close'})
+    this.hass.callService('homeassistant', 'turn_on', {entity_id: close ? 'switch.living_room_shutters_close' : 'switch.living_room_shutters_open'})
+    
+    const loopDelta = delta / ((runtime/1000) * 2) // percentage per second
+
+    this._loop = setInterval(() => {
+      this._currentPercentage = this._currentPercentage + loopDelta;
+      console.log("Current percentage update: ", this._currentPercentage)
+    }, 500)
+
+    this._timeout = setTimeout(() => {
+      this._isOn = false
+      this.hass.callService('input_number', 'set_value', {entity_id: 'input_number.livingroomshutterspercentage', value: next})
+      this.stopShutters()
+    }, runtime)
+    
+    // if (current ) {
+
+    // }
+  }
+
+  protected renderShutters(): any {
+    const status = this.hass.states['input_number.livingroomshutterspercentage'].state
+
+    // return isOpen === 'on'
+    //   ? html`
+    //     <div class='summary-switch on' @click="${() => this.activateTrigger(sw, isOpen)}">
+    //       <svg-item state='toggle-on'></svg-item>
+    //     </div>`
+    //   : html`
+    //     <div class='summary-switch off' @click="${() => this.activateTrigger(sw, isOpen)}">
+    //       <svg-item state='toggle-off'></svg-item>
+    //     </div>`
+
+    return html`
+      <range-slider
+        id="slider-with-change-handler"
+        data-prop="slider-with-change-handler"
+        .min=${0}
+        .max=${100}
+        .step=${10}
+        .value=${status}
+        @change=${this.updateShutter}
+      />`
   }
 
   protected renderToggle(sw: Switch): any {
@@ -227,7 +301,7 @@ export class BoilerplateCard extends LitElement {
         <div class='summary-switch-name'>${sw.name}</div>
         <div class='summary-switches'>
           ${sw.type === 'shutters'
-            ? this.renderShutters(sw)
+            ? this.renderShutters()
             : this.renderToggle(sw)
             // : html`
             // <div class='summary-switch' @click="${() => this.activateTrigger(sw)}">
