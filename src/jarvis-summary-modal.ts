@@ -144,7 +144,6 @@ export class BoilerplateCard extends LitElement {
         this.hass.callService('light', 'toggle', {entity_id: entity, ...data})
         break
       case "switch":
-        console.log(entity)
         this.hass.callService('switch', 'toggle', {entity_id: entity})
         break
       case "shutters":
@@ -200,17 +199,18 @@ export class BoilerplateCard extends LitElement {
     `;
   }
 
-  protected stopShutters(): any {
-    // this.hass.callService('input_boolean', 'turn_off', {entity_id: 'input_boolean.livingroomshuttersstatus'})
+  protected stopShutters(sw: any): any {
     clearInterval(this._loop)
-    this.hass.callService('homeassistant', 'turn_off', {entity_id: 'switch.living_room_shutters_open'})
-    this.hass.callService('homeassistant', 'turn_off', {entity_id:'switch.living_room_shutters_close'})
+    this.hass.callService('homeassistant', 'turn_off', {entity_id: sw.entity_open})
+    this.hass.callService('homeassistant', 'turn_off', {entity_id:sw.entity_close})
   }
 
-  protected updateShutter(e: any): any {
+  protected updateShutter(e: any, sw: any): any {
     const status = this._isOn 
-    const time = 26; // time of full cycle, let's make it 30 for full
-    const current = status ? this._currentPercentage : parseInt(this.hass.states['input_number.livingroomshutterspercentage'].state)
+    const inputName = sw.entity_open.split('.')[1].slice(0, -5)
+
+    const time = 26; // time of full cycle
+    const current = status ? this._currentPercentage : parseInt(this.hass.states[`input_number.${inputName}_percentage`].state)
     const [element] = e.composedPath();
     const next = parseInt(element.value);
     const delta = next - current
@@ -219,46 +219,37 @@ export class BoilerplateCard extends LitElement {
     if (delta === 0) {
       return;
     } else if (status){
-      // stop wtf we're doing
       clearTimeout(this._timeout);
-      this.stopShutters();
-      
+      this.stopShutters(sw);      
     } else {
       this._currentPercentage = current;
     }
     
     const runtime = (Math.abs(delta) * time * 10)
-
-    // this.hass.callService('input_boolean', 'turn_on', {entity_id: 'input_boolean.livingroomshuttersstatus'})    
+   
     this._isOn = true
 
-    console.log(`triggered from ${current} to ${next}`, `delta: ${delta}`, `close: ${close}`);
+    // console.log(`triggered from ${current} to ${next}`, `delta: ${delta}`, `close: ${close}`);
 
     // call shutter close/open
-    this.hass.callService('homeassistant', 'turn_off', {entity_id: close ? 'switch.living_room_shutters_open' : 'switch.living_room_shutters_close'})
-    this.hass.callService('homeassistant', 'turn_on', {entity_id: close ? 'switch.living_room_shutters_close' : 'switch.living_room_shutters_open'})
+    this.hass.callService('homeassistant', 'turn_off', {entity_id: close ? sw.entity_open : sw.entity_close})
+    this.hass.callService('homeassistant', 'turn_on', {entity_id: close ? sw.entity_close : sw.entity_open})
     
     const loopDelta = delta / ((runtime/1000) * 2) // percentage per second
 
     this._loop = setInterval(() => {
       this._currentPercentage = this._currentPercentage + loopDelta;
-      console.log("Current percentage update: ", this._currentPercentage)
+      // console.log("Current percentage update: ", this._currentPercentage)
     }, 500)
 
     this._timeout = setTimeout(() => {
       this._isOn = false
-      this.hass.callService('input_number', 'set_value', {entity_id: 'input_number.livingroomshutterspercentage', value: next})
-      this.stopShutters()
+      this.hass.callService('input_number', 'set_value', {entity_id: `input_number.${inputName}_percentage`, value: next})
+      this.stopShutters(sw)
     }, runtime)
-    
-    // if (current ) {
-
-    // }
   }
 
-  protected renderShutters(): any {
-    const status = this.hass.states['input_number.livingroomshutterspercentage'].state
-
+  protected renderShutters(sw: any): any {
     // return isOpen === 'on'
     //   ? html`
     //     <div class='summary-switch on' @click="${() => this.activateTrigger(sw, isOpen)}">
@@ -277,7 +268,7 @@ export class BoilerplateCard extends LitElement {
         .max=${100}
         .step=${10}
         .value=${status}
-        @change=${this.updateShutter}
+        @change=${(e) => this.updateShutter(e, sw)}
       />`
   }
 
@@ -301,12 +292,8 @@ export class BoilerplateCard extends LitElement {
         <div class='summary-switch-name'>${sw.name}</div>
         <div class='summary-switches'>
           ${sw.type === 'shutters'
-            ? this.renderShutters()
+            ? this.renderShutters(sw)
             : this.renderToggle(sw)
-            // : html`
-            // <div class='summary-switch' @click="${() => this.activateTrigger(sw)}">
-            //   ${this.hass.states[sw.entity || ''].state}
-            // </div>`
           }
         </div>
       </div>

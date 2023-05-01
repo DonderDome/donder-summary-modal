@@ -104,7 +104,7 @@ class RangeSlider extends LitElement {
       --slider-background: #767676;
       --slider-height: 2px;
       --slider-radius: var(--slider-height);
-      --slider-value-color: #ff6200;
+      --slider-value-color: rgb(73, 170, 227);
       --slider-value-width: 0;
       --thumb-color: #adadad;
       --thumb-diameter: 15px;
