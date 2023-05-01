@@ -55,6 +55,7 @@ export class BoilerplateCard extends LitElement {
   @state() protected _currentPercentage = 0;
   @state() protected _loop;
   @state() protected _timeout;
+  @state() protected _throttle;
 
   public setConfig(config: BoilerplateCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
@@ -205,14 +206,11 @@ export class BoilerplateCard extends LitElement {
     this.hass.callService('homeassistant', 'turn_off', {entity_id:sw.entity_close})
   }
 
-  protected updateShutter(e: any, sw: any): any {
+  protected updateShutter(next: any, sw: any): any {
     const status = this._isOn 
     const inputName = sw.entity_open.split('.')[1].slice(0, -5)
-
     const time = 26; // time of full cycle
     const current = status ? this._currentPercentage : parseInt(this.hass.states[`input_number.${inputName}_percentage`].state)
-    const [element] = e.composedPath();
-    const next = parseInt(element.value);
     const delta = next - current
     const close = delta < 0
 
@@ -249,16 +247,20 @@ export class BoilerplateCard extends LitElement {
     }, runtime)
   }
 
+  protected throttleUpdate(e: any, sw: any): any {
+    const [element] = e.composedPath();
+    const next = parseInt(element.value);
+
+    clearTimeout(this._throttle);
+    
+    this._throttle = setTimeout(() => {  
+      this.updateShutter(next, sw)
+    }, 2000)
+  }
+
   protected renderShutters(sw: any): any {
-    // return isOpen === 'on'
-    //   ? html`
-    //     <div class='summary-switch on' @click="${() => this.activateTrigger(sw, isOpen)}">
-    //       <svg-item state='toggle-on'></svg-item>
-    //     </div>`
-    //   : html`
-    //     <div class='summary-switch off' @click="${() => this.activateTrigger(sw, isOpen)}">
-    //       <svg-item state='toggle-off'></svg-item>
-    //     </div>`
+    const inputName = sw.entity_open.split('.')[1].slice(0, -5)
+    const status = parseInt(this.hass.states[`input_number.${inputName}_percentage`].state)
 
     return html`
       <range-slider
@@ -268,7 +270,7 @@ export class BoilerplateCard extends LitElement {
         .max=${100}
         .step=${10}
         .value=${status}
-        @change=${(e) => this.updateShutter(e, sw)}
+        @change=${(e) => this.throttleUpdate(e, sw)}
       />`
   }
 
