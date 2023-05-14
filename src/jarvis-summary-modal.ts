@@ -51,12 +51,10 @@ export class BoilerplateCard extends LitElement {
 
   @property({ attribute: false }) public hass!: HomeAssistant;
   @state() private config!: BoilerplateCardConfig;
-  @state() protected _isHassLoaded = false;
-  @state() protected _isOn = false;
-  @state() protected _currentPercentage = 0;
-  @state() protected _runTimeout;
-  @state() protected _timeout;
-  @state() protected _throttle;
+  @state() protected _areOn = {};
+  @state() protected _currentPercentages = {};
+  @state() protected _runTimeouts = {};
+  @state() protected _throttles = {};
 
   public setConfig(config: BoilerplateCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
@@ -91,9 +89,8 @@ export class BoilerplateCard extends LitElement {
       if (oldHass) {
         let hasChanged = false
         for (let i=0; i<=element.config.switches.length-1; i++) {
-          const { entity_open } = element.config.switches[i]
-          const inputName = entity_open?.split('.')[1].slice(0, -5)
-          const percentageEntity = `input_number.${inputName}_percentage`
+          const { entity_open, switch_name } = element.config.switches[i]
+          const percentageEntity = `input_number.${switch_name}_percentage`
 
           if (entity_open && oldHass.states[percentageEntity] !== element.hass!.states[percentageEntity]) {
             hasChanged = true
@@ -198,96 +195,37 @@ export class BoilerplateCard extends LitElement {
     `;
   }
 
-  // protected stopShutter(sw: any): any {
-  //   const inputName = sw.entity_open.split('.')[1].slice(0, -5)
-
-  //   clearInterval(this._timeout)
-  //   console.log("Stopped", this._currentPercentage)
-  //   this.hass.callService('input_number', 'set_value', {entity_id: `input_number.${inputName}_percentage`, value: this._currentPercentage})
-  // }
-
   protected updateShutter(next: any, sw: any): any {
     console.log("updateShutter")
-    const status = this._isOn 
+    const status = this._areOn[sw.switch_name]
     const time = 26; // time of full cycle
-    const current = this._currentPercentage
+    const current = this._currentPercentages[sw.switch_name]
     const delta = next - current
     const close = delta < 0
 
     if (delta === 0) {
       return;
     } else if (status){
-      clearTimeout(this._runTimeout);
+      clearTimeout(this._runTimeouts[sw.switch_name]);
       this.hass.callService('homeassistant', 'turn_off', {entity_id: sw.entity_open})
       this.hass.callService('homeassistant', 'turn_off', {entity_id: sw.entity_close})
     }
     
     const runtime = (Math.abs(delta) * time * 10)
    
-    this._isOn = true
+    this._areOn[sw.switch_name] = true
 
     // call shutter close/open
     this.hass.callService('homeassistant', 'turn_off', {entity_id: close ? sw.entity_open : sw.entity_close})
     this.hass.callService('homeassistant', 'turn_on', {entity_id: close ? sw.entity_close : sw.entity_open})
 
-    this._runTimeout = setTimeout(() => {
-      this._isOn = false
+    this._runTimeouts[sw.switch_name] = setTimeout(() => {
+      this._areOn[sw.switch_name] = false
       // this.hass.callService('input_number', 'set_value', {entity_id: `input_number.${inputName}_percentage`, value: next})
       this.hass.callService('homeassistant', 'turn_off', {entity_id: sw.entity_open})
       this.hass.callService('homeassistant', 'turn_off', {entity_id: sw.entity_close})
     }, runtime)
   }
-
-  // protected shutterListener(sw: any): any {
-  //   console.log("shutterListener")
-  //   // detect a close/open CHANGE in a switch (done)
-  //   const open = this.hass.states[sw.entity_open].state === 'on'
-  //   const close = this.hass.states[sw.entity_close].state === 'on'
-
-  //   console.log(open, close, this._currentPercentage)
-
-  //   // changed to on?
-  //   if (open || close) {
-  //     // get "direction" (open or close switch)
-  //     if (open && this._currentPercentage) {
-  //       clearInterval(this._timeout)
-  //       this._timeout = setInterval(() => {
-  //         const percentage = this._currentPercentage
-  //         let newPercentage = percentage + 100/52
-
-  //         if (newPercentage > 100) {
-  //           newPercentage = 100
-  //           this._currentPercentage = newPercentage
-  //           this.stopShutter(sw)
-  //         } else {
-  //           this._currentPercentage = newPercentage
-  //         }
-  //         console.log("Up", this._currentPercentage)
-  //       }, 500)
-  //     } else if (close && this._currentPercentage) {
-  //       clearInterval(this._timeout)
-  //       this._timeout = setInterval(() => {
-  //         const percentage = this._currentPercentage
-  //         let newPercentage = percentage - 100/52
-
-  //         if (newPercentage < 0) {
-  //           newPercentage = 0
-  //           this._currentPercentage = newPercentage
-  //           this.stopShutter(sw)
-  //         } else {
-  //           this._currentPercentage = newPercentage
-  //         }
-  //         console.log("Down", this._currentPercentage)
-  //       }, 500)
-  //     }
-  //   }
-
-  //   // changed to off?
-  //   if (!open && !close && this._currentPercentage) {
-  //     this.stopShutter(sw)
-  //   }
-
-  // }
 
   protected throttleUpdate(e: any, sw: any): any {
     const [element] = e.composedPath();
@@ -295,26 +233,23 @@ export class BoilerplateCard extends LitElement {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    console.log("throttleUpdate", next, parseInt(this._currentPercentage))
+    console.log("throttleUpdate", next, parseInt(this._currentPercentages[sw.switch_name]))
 
-    clearTimeout(this._throttle);
+    clearTimeout(this._throttles[sw.switch_name]);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    if (this._currentPercentage && next !== parseInt(this._currentPercentage)) {
-      this._throttle = setTimeout(() => {  
+    if (this._currentPercentages[sw.switch_name] && next !== parseInt(this._currentPercentages[sw.switch_name])) {
+      this._throttles[sw.switch_name] = setTimeout(() => {  
         this.updateShutter(next, sw)
       }, 2000)
     }
   }
 
   protected renderShutters(sw: any): any {
-    const inputName = sw.entity_open.split('.')[1].slice(0, -5)
-    const percentage = parseFloat(this.hass?.states[`input_number.living_room_shutters_percentage`].state)
+    const percentage = parseFloat(this.hass?.states[`input_number.${sw.switch_name}_percentage`].state)
   
-    this._currentPercentage = percentage
-
-    // this.shutterListener(sw);
+    this._currentPercentages[sw.switch_name] = percentage
 
     return html`
       <range-slider
