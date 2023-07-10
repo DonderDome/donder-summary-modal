@@ -18,7 +18,6 @@ import {
 } from 'custom-card-helpers'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
 import { CARD_VERSION } from './constants';
 import './editor';
-import './range-slider';
 
 import type { BoilerplateCardConfig, Switch } from './types';
 import { actionHandler } from './action-handler-directive';
@@ -83,22 +82,18 @@ export class BoilerplateCard extends LitElement {
     if (element.config!.switches) {
       const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
       if (oldHass) {
+
         let hasChanged = false
         for (let i=0; i<=element.config.switches.length-1; i++) {
-          const { entity, entity_open, switch_name } = element.config.switches[i]
-          const percentageEntity = `input_number.${switch_name}_percentage`
-
-          if (entity_open && oldHass.states[percentageEntity] !== element.hass!.states[percentageEntity]) {
-            hasChanged = true
-            break
-          }else if (entity && oldHass.states[entity] !== element.hass!.states[entity]) {
+          const { entity } = element.config.switches[i]
+          if (entity && oldHass.states[entity] !== element.hass!.states[entity]) {
             hasChanged = true
             break
           }
         }
         return hasChanged
       }
-      return false;
+      return true;
     } else {
       return false;
     }
@@ -129,8 +124,9 @@ export class BoilerplateCard extends LitElement {
     `;
   }
 
-  private activateTrigger(sw: Switch, isOpen?: string) {
-    const { type, entity, entity_close, entity_open, data } = sw
+  private activateTrigger(sw: Switch) {
+    const { type, entity, data } = sw
+
     switch(type) {
       case "boolean":
         this.hass.callService('input_boolean', 'toggle', {entity_id: entity})
@@ -140,10 +136,6 @@ export class BoilerplateCard extends LitElement {
         break
       case "switch":
         this.hass.callService('switch', 'toggle', {entity_id: entity})
-        break
-      case "shutters":
-        this.hass.callService('homeassistant', 'turn_off', {entity_id: isOpen === 'on' ? entity_open : entity_close})
-        this.hass.callService('homeassistant', 'turn_on', {entity_id: isOpen === 'on' ? entity_close : entity_open})
         break
     }
   }
@@ -179,6 +171,9 @@ export class BoilerplateCard extends LitElement {
         justify-content: flex-end;
         align-items: end;
       }
+      .summary-switches shutter-slider {
+        flex: 1;
+      }
       .summary-switch {
         width: 30px;
         color: #ccc;
@@ -198,6 +193,7 @@ export class BoilerplateCard extends LitElement {
     return html`
       <shutter-slider
         hass=${this.hass}
+        config=${sw}
         sw=${sw}
       />`
   }
@@ -207,11 +203,11 @@ export class BoilerplateCard extends LitElement {
 
     return isOn === 'on'
       ? html`
-        <div class='summary-switch on' @click="${() => this.activateTrigger(sw, isOn)}">
+        <div class='summary-switch on' @click="${() => this.activateTrigger(sw)}">
           <svg-item state='toggle-on'></svg-item>
         </div>`
       : html`
-        <div class='summary-switch off' @click="${() => this.activateTrigger(sw, isOn)}">
+        <div class='summary-switch off' @click="${() => this.activateTrigger(sw)}">
           <svg-item state='toggle-off'></svg-item>
         </div>`
   }
