@@ -163,6 +163,7 @@ export class BoilerplateCard extends LitElement {
         padding-right: 30px;
         padding-top: 5px;
         opacity: .8;
+        flex: 1;
       }
       .summary-switches {
         display: flex;
