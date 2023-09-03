@@ -79,13 +79,13 @@ export class BoilerplateCard extends LitElement {
       return true;
     }
 
-    if (element.config!.switches) {
+    if (element.config!.entities) {
       const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
       if (oldHass) {
 
         let hasChanged = false
-        for (let i=0; i<=element.config.switches.length-1; i++) {
-          const { entity } = element.config.switches[i]
+        for (let i=0; i<=element.config.entities.length-1; i++) {
+          const { entity } = element.config.entities[i]
           if (entity && oldHass.states[entity] !== element.hass!.states[entity]) {
             hasChanged = true
             break
@@ -228,18 +228,6 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected render(): TemplateResult | void {
-    /*
-      ## INTERFACE
-      - this.hass: A lot of information about everything in HA, such as states, theme, etc. The source of the tree
-        - states: States of each of the components available
-      - this.config: Lovelace settings for this instance
-      - this.hass.callService(domain, service, action.service_data): To call services, like an API
-
-      Example: this.hass.states[this.config.entities[0]] shows the state of the first component
-     */
-
-    // const states = this.hass.states
-
     // TODO Check for stateObj or other necessary things and render a warning if missing
     if (this.config.show_warning) {
       return this._showWarning('warning message');
@@ -256,7 +244,7 @@ export class BoilerplateCard extends LitElement {
         .label=${`Boilerplate: ${this.config || 'No Entity Defined'}`}
       >
         <div class='jarvis-widget'>
-          ${this.config.switches.map(e => {
+          ${this.config.entities.map(e => {
             return this.renderSwitch(e)
           })}
         </div>
