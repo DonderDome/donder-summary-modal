@@ -24,7 +24,7 @@ import { actionHandler } from './action-handler-directive';
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  jarvis-SUMMARY-MODAL \n%c  version: ${CARD_VERSION}  `,
+  `%c  donder-summary-modal \n%c  version: ${CARD_VERSION}  `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
