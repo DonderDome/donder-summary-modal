@@ -294,7 +294,7 @@ const Z=(t,e)=>"method"===e.kind&&e.descriptor&&!("value"in e.descriptor)?{...e,
         hass=${this.hass}
         config=${t}
         sw=${t}
-      />`}renderToggle(t){const e="on"===this.hass.states[t.entity||""].state;return P`<ha-switch .checked=${e} @change=${()=>this.activateTrigger(t)}></ha-switch>`}renderSwitch(t){return P`
+      />`}renderToggle(t){const e="on"===this.hass.states[t.entity||""].state;return console.log(e,this.hass.states[t.entity],t),P`<ha-switch .checked=${e} @change=${()=>this.activateTrigger(t)}></ha-switch>`}renderSwitch(t){return P`
       <div class='summary-switch-wrapper'>
         <div class='summary-switch-name'>${t.name}</div>
         <div class='summary-switches'>
