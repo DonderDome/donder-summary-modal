@@ -266,16 +266,18 @@ export class BoilerplateCard extends LitElement {
 
   protected renderToggle(sw: any): any {
     const isOn = this.hass.states[sw.entity || ''].state
+    
+    return html `<ha-switch .checked=${isOn} @change=${() => this.activateTrigger(sw)}></ha-switch>`
 
-    return isOn === 'on'
-      ? html`
-        <div class='summary-switch on' @click="${() => this.activateTrigger(sw)}">
-          <svg-item state='toggle-on'></svg-item>
-        </div>`
-      : html`
-        <div class='summary-switch off' @click="${() => this.activateTrigger(sw)}">
-          <svg-item state='toggle-off'></svg-item>
-        </div>`
+    // return isOn === 'on'
+    //   ? html`
+    //     <div class='summary-switch on' @click="${() => this.activateTrigger(sw)}">
+    //       <svg-item state='toggle-on'></svg-item>
+    //     </div>`
+    //   : html`
+    //     <div class='summary-switch off' @click="${() => this.activateTrigger(sw)}">
+    //       <svg-item state='toggle-off'></svg-item>
+    //     </div>`
   }
 
   protected renderSwitch(sw: any): any {
