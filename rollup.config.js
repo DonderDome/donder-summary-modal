@@ -32,7 +32,7 @@ const plugins = [
 
 export default [
   {
-    input: 'src/jarvis-summary-modal.ts',
+    input: 'src/donder-summary-modal.ts',
     output: {
       dir: 'dist',
       format: 'es',

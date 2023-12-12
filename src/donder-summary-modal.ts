@@ -31,7 +31,7 @@ console.info(
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
-  type: 'jarvis-summary-modal',
+  type: 'donder-summary-modal',
   name: 'Boilerplate Card',
   description: 'A template custom card for you to create something awesome',
 });
@@ -39,17 +39,25 @@ console.info(
 export class BoilerplateCard extends LitElement {
   
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
-    // REPLACE "jarvis-summary-modal" with widget name, everywhere in the project
+    // REPLACE "donder-summary-modal" with widget name, everywhere in the project
     // REPLACE the file name with the actual widget name
-    return document.createElement('jarvis-summary-modal-editor');
+    return document.createElement('donder-summary-modal-editor');
   }
 
   public static getStubConfig(): Record<string, unknown> {
     return {};
   }
 
-  @property({ attribute: false }) public hass!: HomeAssistant;
-  @state() private config!: BoilerplateCardConfig;
+  @property() state!: string
+  @property() hass!: any
+  @property() config!: any
+  @property() event!: any
+  @property() callback!: any
+  @property() serviceCall!: any
+  @state() protected _active;
+  @state() protected _expanded = false;
+  @state() protected _scene_mode = false;
+  @state() protected _current_scene = null;
 
   public setConfig(config: BoilerplateCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
@@ -124,15 +132,15 @@ export class BoilerplateCard extends LitElement {
     `;
   }
 
-  private activateTrigger(sw: Switch) {
-    const { type, entity, data } = sw
+  private activateTrigger(sw: any) {
+    const { type, entity, entity_data } = sw
 
     switch(type) {
       case "boolean":
         this.hass.callService('input_boolean', 'toggle', {entity_id: entity})
         break
       case "lights":
-        this.hass.callService('light', 'toggle', {entity_id: entity, ...data})
+        this.hass.callService('light', 'toggle', {entity_id: entity, ...entity_data})
         break
       case "switch":
         this.hass.callService('switch', 'toggle', {entity_id: entity})
@@ -142,21 +150,23 @@ export class BoilerplateCard extends LitElement {
 
   static get styles(): CSSResultGroup {
     return css`
-      .type-custom-jarvis-summary-modal {
+      .type-custom-summary-modal {
         height: 100%;
         width: 100%;
         font-family: "Rajdhani", sans-serif;
       }
-      .jarvis-widget {
+      .donder-widget {
         height: 100%;
         width: 100%;
         padding: 20px;
         box-sizing: border-box;
         color: #fff;
+        display: flex;
+        flex-wrap: wrap;
       }
       .summary-switch-wrapper {
         display: flex;
-        padding: 10px 0;
+        padding: 10px 0 1px;
         font-size: 1.2rem;
       }
       .summary-switch-name {
@@ -187,6 +197,61 @@ export class BoilerplateCard extends LitElement {
         position: relative;
         top: -6px;
       }
+      .summary-group-wrapper {
+        box-sizing: border-box;
+        margin-bottom: 40px;
+        flex: 1 0 50%;
+        max-width: 50%;
+      }
+      .summary-group-wrapper .summary-group-name {
+        opacity: .6;
+        margin-bottom: 10px;
+        font-size: .8em;
+      }
+      .summary-group-wrapper:nth-child(even) {
+        padding-left: 20px;
+      }
+      .summary-group-wrapper:nth-child(odd) {
+        padding-right: 20px;
+      }
+      .add-automation-icon {
+        width: 30px;
+      }
+      .scene {
+        font-weight: 200;
+        color: rgb(255, 255, 255);
+        box-sizing: border-box;
+        background: url("/local/donder/assets/cctv_frame_fat.svg") no-repeat;
+        text-align: center;
+        font-size: 0.8em;
+        padding: 0px;
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-content: center;
+        align-items: center;
+        line-height: 1.1em;
+        margin: 5px;
+        justify-content: center;
+      }
+      .add-scene-icon {
+        width: 40px;
+      }
+      .summary-group-scenes {
+        display: flex;
+      }
+      @media (max-width: 600px) {
+        .summary-group-wrapper {
+          flex: 1 0 100%;
+          max-width: 100%;
+        }
+        .summary-group-wrapper:nth-child(even) {
+          padding-left: 0px;
+        }
+        .summary-group-wrapper:nth-child(odd) {
+          padding-right: 0px;
+        }
+      }
     `;
   }
 
@@ -199,7 +264,7 @@ export class BoilerplateCard extends LitElement {
       />`
   }
 
-  protected renderToggle(sw: Switch): any {
+  protected renderToggle(sw: any): any {
     const isOn = this.hass.states[sw.entity || ''].state
 
     return isOn === 'on'
@@ -213,7 +278,7 @@ export class BoilerplateCard extends LitElement {
         </div>`
   }
 
-  protected renderSwitch(sw: Switch): any {
+  protected renderSwitch(sw: any): any {
     return html`
       <div class='summary-switch-wrapper'>
         <div class='summary-switch-name'>${sw.name}</div>
@@ -227,6 +292,82 @@ export class BoilerplateCard extends LitElement {
     `
   }
 
+  protected _handleSceneAction(ev: ActionHandlerEvent, scene): void {
+    const { action } = ev?.detail
+
+    if (action === 'hold') {
+      this._toggleEditScene(scene)
+    }
+
+    if (action === 'tap') {
+      this.hass.callService('donder_scenes', 'trigger', {scene: scene})
+    }
+  }
+
+  protected _toggleEditScene(scene: any) {
+    if (scene) {
+      this._current_scene = scene;
+      this._scene_mode = !this._scene_mode
+    }
+  }
+
+  protected _toggleCreateScene() {
+    this._current_scene = null;
+    this._scene_mode = !this._scene_mode
+  }
+
+  protected renderSwitchGroup(groups: any): any {
+    const groupNames = Object.keys(groups)
+    const scenes = this.hass.states['donder_scenes.global']?.attributes
+    const sceneKeys = Object.keys(scenes)
+    const scenesToRemove = ["awake", "sleep"];
+    const filteredSceneKeys = sceneKeys.filter((item) => !scenesToRemove.includes(item));
+
+    return html`
+      ${groupNames.map(group => {
+        return html`<div class='summary-group-wrapper'>
+          <div class='summary-group-name'>${group}</div>
+          <div class='summary-group-switches'>
+            ${groups[group].map(e => {
+              return this.renderSwitch(e)
+            })}
+          </div>
+        </div>`
+      })}
+      
+      ${this.config.showScenes
+        ? html`
+          <div class='summary-group-wrapper'>
+            <div class='summary-group-name'>Scenes</div>
+            <div class='summary-group-scenes'>
+              ${filteredSceneKeys.map(scene => {
+                return html`
+                  <div
+                    @action=${(e) => this._handleSceneAction(e, scene)}
+                    class="scene"
+                    .actionHandler=${actionHandler({
+                      hasHold: hasAction(this.config.hold_action),
+                    })}
+                  >${scenes[scene].name}</div>
+                `
+              })}
+              <div class="scene" @click=${() => this._scene_mode = true}>
+                <div class="add-scene-icon">
+                  <svg-item state="plus"></svg-item>
+                </div>
+              </div>
+            </div>
+          </div>`
+        : null}
+    `
+  }
+
+  protected renderSceneEditor() {
+    return html`<div>
+      scene modal would be here
+    </div>`
+  }
+
   protected render(): TemplateResult | void {
     // TODO Check for stateObj or other necessary things and render a warning if missing
     if (this.config.show_warning) {
@@ -237,20 +378,37 @@ export class BoilerplateCard extends LitElement {
       return this._showError('error message');
     }
 
+    let entityGroups = null;
+    entityGroups = this.config.entities.reduce((g, e) => {
+      const { group } = e;
+      g[group] = g[group] ?? [];
+      g[group].push(e);
+      return g;
+    }, {});
+
     return html`
       <ha-card
         @action=${this._handleAction}
+        .actionHandler=${actionHandler({
+          hasHold: hasAction(this.config.hold_action),
+          hasDoubleClick: hasAction(this.config.double_tap_action),
+        })}
         tabindex="0"
         .label=${`Boilerplate: ${this.config || 'No Entity Defined'}`}
       >
-        <div class='jarvis-widget'>
-          ${this.config.entities.map(e => {
-            return this.renderSwitch(e)
-          })}
-        </div>
+        <div class='donder-widget'>
+        ${!this._scene_mode
+          ? entityGroups
+            ? this.renderSwitchGroup(entityGroups)
+            : this.config.entities.map(e => {
+              return this.renderSwitch(e)
+              })
+          : this.renderSceneEditor()
+        }
+      </div>
       </ha-card>
     `;
   }
 }
 
-customElements.define("jarvis-summary-modal", BoilerplateCard);
+customElements.define("donder-summary-modal", BoilerplateCard);
