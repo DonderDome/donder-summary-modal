@@ -276,7 +276,9 @@ export class BoilerplateCard extends LitElement {
   protected renderToggle(sw: any): any {
     const isOn = this.hass.states[sw.entity || ''].state === 'on'
 
-    return html `<ha-switch .checked=${isOn} @action=${() => this.activateTrigger(sw)}></ha-switch>`
+    return html `<ha-switch .checked=${isOn} @action=${() => this.activateTrigger(sw)} .actionHandler=${actionHandler({
+      hasHold: hasAction(this.config.hold_action),
+    })}></ha-switch>`
   }
 
   protected renderSwitch(sw: any): any {
