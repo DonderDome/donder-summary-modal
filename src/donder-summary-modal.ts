@@ -269,12 +269,6 @@ export class BoilerplateCard extends LitElement {
         ignore-bar-touch
       ></ha-slider>
     `
-    // return html`
-    //   <shutter-slider
-    //     hass=${this.hass}
-    //     config=${sw}
-    //     sw=${sw}
-    //   />`
   }
 
   protected renderToggle(sw: any): any {
