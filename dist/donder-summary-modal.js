@@ -186,7 +186,7 @@ const G=(t,e)=>"method"===e.kind&&e.descriptor&&!("value"in e.descriptor)?{...e,
       <hui-warning>${t}</hui-warning>
     `}_showError(t){const e=document.createElement("hui-error-card");return e.setConfig({type:"error",error:t,origConfig:this.config}),P`
       ${e}
-    `}activateTrigger(t){console.log("trigger");const{type:e,entity:i,entity_data:o}=t;switch(e){case"boolean":this.hass.callService("input_boolean","toggle",{entity_id:i});break;case"lights":this.hass.callService("light","toggle",Object.assign({entity_id:i},o));break;case"switch":this.hass.callService("switch","toggle",{entity_id:i})}}static get styles(){return n`
+    `}activateTrigger(t){console.log("triggers");const{type:e,entity:i,entity_data:o}=t;switch(e){case"boolean":this.hass.callService("input_boolean","toggle",{entity_id:i});break;case"lights":this.hass.callService("light","toggle",Object.assign({entity_id:i},o));break;case"switch":this.hass.callService("switch","toggle",{entity_id:i})}}static get styles(){return n`
       .type-custom-summary-modal {
         height: 100%;
         width: 100%;

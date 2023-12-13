@@ -134,7 +134,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   private activateTrigger(sw: any) {
-    console.log("trigger")
+    console.log("triggers")
     const { type, entity, entity_data } = sw
 
     switch(type) {
