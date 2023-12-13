@@ -135,7 +135,6 @@ export class BoilerplateCard extends LitElement {
 
   private activateTrigger(sw: any) {
     const { type, entity, entity_data } = sw
-    console.log("here")
 
     switch(type) {
       case "boolean":
@@ -276,7 +275,14 @@ export class BoilerplateCard extends LitElement {
   protected renderToggle(sw: any): any {
     const isOn = this.hass.states[sw.entity || ''].state === 'on'
 
-    return html `<ha-switch .checked=${isOn} @click=${() => this.activateTrigger(sw)}></ha-switch>`
+    return html `
+      <div
+        @action=${this._handleAction}
+        tabindex="0"
+        .label=${`Boilerplate: ${this.config || 'No Entity Defined'}`}
+      >
+        <ha-switch .checked=${isOn} @click=${() => this.activateTrigger(sw)}></ha-switch>
+      </div>`
   }
 
   protected renderSwitch(sw: any): any {
