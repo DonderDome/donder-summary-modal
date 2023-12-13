@@ -256,28 +256,30 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected renderShutters(sw: any): any {
-    return html`
-      <shutter-slider
-        hass=${this.hass}
-        config=${sw}
-        sw=${sw}
-      />`
+    const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
+    return html `
+      <ha-slider
+        .min=${0}
+        .max=${100}
+        .step=${20}
+        .value=${percentage}
+        @change=${(ev) =>
+          console.log("here", ev.target.value)}
+        ignore-bar-touch
+      ></ha-slider>
+    `
+    // return html`
+    //   <shutter-slider
+    //     hass=${this.hass}
+    //     config=${sw}
+    //     sw=${sw}
+    //   />`
   }
 
   protected renderToggle(sw: any): any {
     const isOn = this.hass.states[sw.entity || ''].state === 'on'
 
     return html `<ha-switch .checked=${isOn} @click=${() => this.activateTrigger(sw)}></ha-switch>`
-
-    // return isOn === 'on'
-    //   ? html`
-    //     <div class='summary-switch on' @click="${() => this.activateTrigger(sw)}">
-    //       <svg-item state='toggle-on'></svg-item>
-    //     </div>`
-    //   : html`
-    //     <div class='summary-switch off' @click="${() => this.activateTrigger(sw)}">
-    //       <svg-item state='toggle-off'></svg-item>
-    //     </div>`
   }
 
   protected renderSwitch(sw: any): any {
