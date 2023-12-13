@@ -108,6 +108,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   private _handleAction(ev: ActionHandlerEvent): void {
+    console.log("action")
     if (this.hass && this.config && ev.detail.action) {
       handleAction(this, this.hass, this.config, ev.detail.action);
     }
@@ -134,6 +135,7 @@ export class BoilerplateCard extends LitElement {
 
   private activateTrigger(sw: any) {
     const { type, entity, entity_data } = sw
+    console.log("here")
 
     switch(type) {
       case "boolean":
