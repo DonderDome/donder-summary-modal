@@ -264,7 +264,8 @@ export class BoilerplateCard extends LitElement {
         .step=${20}
         .value=${percentage}
         @change=${(ev) =>
-          console.log("here", ev.target.value)}
+            this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: ev.target.value})
+          }
         ignore-bar-touch
       ></ha-slider>
     `

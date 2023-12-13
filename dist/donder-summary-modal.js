@@ -295,7 +295,7 @@ const G=(t,e)=>"method"===e.kind&&e.descriptor&&!("value"in e.descriptor)?{...e,
         .max=${100}
         .step=${20}
         .value=${i}
-        @change=${t=>console.log("here",t.target.value)}
+        @change=${e=>this.hass.callService("cover","set_cover_position",{entity_id:t.entity,position:e.target.value})}
         ignore-bar-touch
       ></ha-slider>
     `}renderToggle(t){const e="on"===this.hass.states[t.entity||""].state;return P`<ha-switch .checked=${e} @click=${()=>this.activateTrigger(t)}></ha-switch>`}renderSwitch(t){return P`
