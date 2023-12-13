@@ -108,7 +108,6 @@ export class BoilerplateCard extends LitElement {
   }
 
   private _handleAction(ev: ActionHandlerEvent): void {
-    console.log("clicked")
     if (this.hass && this.config && ev.detail.action) {
       handleAction(this, this.hass, this.config, ev.detail.action);
     }
@@ -275,15 +274,7 @@ export class BoilerplateCard extends LitElement {
   protected renderToggle(sw: any): any {
     const isOn = this.hass.states[sw.entity || ''].state === 'on'
 
-    return html `<ha-switch
-      .checked=${isOn}
-      @action=${this._handleAction}
-      .actionHandler=${actionHandler({
-        hasHold: hasAction(this.config.hold_action),
-        hasDoubleClick: hasAction(this.config.double_tap_action),
-      })}
-      tabindex="0"
-      .label=${`Boilerplate: ${this.config || 'No Entity Defined'}`}></ha-switch>`
+    return html `<ha-switch .checked=${isOn} @click=${() => this.activateTrigger(sw)}></ha-switch>`
   }
 
   protected renderSwitch(sw: any): any {
