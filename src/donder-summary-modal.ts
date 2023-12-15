@@ -108,7 +108,6 @@ export class BoilerplateCard extends LitElement {
   }
 
   private _handleAction(ev: ActionHandlerEvent): void {
-    console.log("action")
     if (this.hass && this.config && ev.detail.action) {
       handleAction(this, this.hass, this.config, ev.detail.action);
     }
@@ -134,7 +133,6 @@ export class BoilerplateCard extends LitElement {
   }
 
   private activateTrigger(sw: any) {
-    console.log("triggers")
     const { type, entity, entity_data } = sw
 
     switch(type) {
@@ -165,6 +163,9 @@ export class BoilerplateCard extends LitElement {
         color: #fff;
         display: flex;
         flex-wrap: wrap;
+        background-color: var(--ha-card-background);
+        color: var(--text-primary-color);
+        border-radius: var(--ha-card-border-radius)
       }
       .summary-switch-wrapper {
         display: flex;
