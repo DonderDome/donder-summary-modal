@@ -32,7 +32,7 @@ console.info(
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
   type: 'donder-summary-modal',
-  name: 'Boilerplate Card',
+  name: 'Donder Summary Modal',
   description: 'A template custom card for you to create something awesome',
 });
 
