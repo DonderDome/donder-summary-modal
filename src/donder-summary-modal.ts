@@ -150,10 +150,8 @@ export class BoilerplateCard extends LitElement {
 
   static get styles(): CSSResultGroup {
     return css`
-      .type-custom-summary-modal {
-        height: 100%;
-        width: 100%;
-        font-family: "Rajdhani", sans-serif;
+      .type-custom-donder-summary-modal {
+        background: transparent;
       }
       .donder-widget {
         height: 100%;
