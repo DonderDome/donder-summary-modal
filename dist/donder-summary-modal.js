@@ -189,7 +189,6 @@ const G=(t,e)=>"method"===e.kind&&e.descriptor&&!("value"in e.descriptor)?{...e,
     `}activateTrigger(t){const{type:e,entity:i,entity_data:o}=t;switch(e){case"boolean":this.hass.callService("input_boolean","toggle",{entity_id:i});break;case"lights":this.hass.callService("light","toggle",Object.assign({entity_id:i},o));break;case"switch":this.hass.callService("switch","toggle",{entity_id:i})}}static get styles(){return s`
       .type-custom-donder-summary-modal {
         background-color: transparent;
-        background: transparent;
       }
       .donder-widget {
         height: 100%;
