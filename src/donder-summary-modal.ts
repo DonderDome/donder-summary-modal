@@ -151,6 +151,7 @@ export class BoilerplateCard extends LitElement {
   static get styles(): CSSResultGroup {
     return css`
       .type-custom-donder-summary-modal {
+        background-color: transparent;
         background: transparent;
       }
       .donder-widget {
