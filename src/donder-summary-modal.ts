@@ -308,9 +308,36 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected _toggleEditScene(scene: any) {
+    const env = this.hass.states['donder_env.global'].attributes
     if (scene) {
-      this._current_scene = scene;
-      this._scene_mode = !this._scene_mode
+      this.hass.callService('browser_mod', 'popup', {
+        content: {
+          type: 'custom:donder-scene-modal',
+          sensors: env.sensors,
+          devices: [
+            ...env.shutters,
+            ...env.switches
+          ],
+          locked: true,
+          sceneName: this.config.scene,
+          scene: scene
+        },
+        browser_id: localStorage.getItem('browser_mod-browser-id'),
+        card_mod: {
+          style:{
+            "ha-dialog$": `div.mdc-dialog div.mdc-dialog__scrim {
+              -webkit-backdrop-filter: blur(0.7em);
+              backdrop-filter: blur(0.7em);
+              transition: none !important;
+              background-color: rgba(0, 0, 0, 0.5) !important;
+            } div.mdc-dialog div.mdc-dialog__surface {
+              border-radius: 5px;
+              width: 900px;
+            }
+            `,
+          }
+        }
+      })
     }
   }
 
