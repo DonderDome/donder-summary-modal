@@ -345,6 +345,7 @@ export class BoilerplateCard extends LitElement {
         locked: true,
         sceneName: this.config.scene,
         scene: scene ? this.hass.states['donder_scenes.global'].attributes[scene] : null,
+        closeModal: () => this.closeModal()
       },
       browser_id: localStorage.getItem('browser_mod-browser-id'),
     })
