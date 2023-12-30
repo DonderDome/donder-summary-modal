@@ -307,6 +307,29 @@ export class BoilerplateCard extends LitElement {
     }
   }
 
+  protected closeModal() {
+    const env = this.hass.states['donder_env.global'].attributes
+    this.hass.callService('browser_mod', 'popup', { 
+      content: {
+        type: 'custom:donder-summary-modal',
+        entities: env[this.config.icon],
+        env,
+        showScenes: this.config.name === 'Routines'
+      },
+      left_button: "Close",
+      left_button_action: this.hass.callService('browser_mod', 'close_popup', {browser_id: localStorage.getItem('browser_mod-browser-id')}),
+      browser_id: localStorage.getItem('browser_mod-browser-id'),
+      card_mod: {
+        style:{
+          "ha-dialog$": `div.mdc-dialog div.mdc-dialog__surface {
+            max-width: 90%;
+          }
+          `,
+        }
+      }
+    })
+  }
+
   protected _toggleEditScene(scene?: any) {
     const env = this.hass.states['donder_env.global'].attributes
     this.hass.callService('browser_mod', 'popup', {
@@ -322,6 +345,7 @@ export class BoilerplateCard extends LitElement {
         locked: true,
         sceneName: this.config.scene,
         scene: scene ? this.hass.states['donder_scenes.global'].attributes[scene] : null,
+        closeModal: this.closeModal
       },
       browser_id: localStorage.getItem('browser_mod-browser-id'),
     })
@@ -373,12 +397,6 @@ export class BoilerplateCard extends LitElement {
     `
   }
 
-  protected renderSceneEditor() {
-    return html`<div>
-      scene modal would be here
-    </div>`
-  }
-
   protected render(): TemplateResult | void {
     // TODO Check for stateObj or other necessary things and render a warning if missing
     if (this.config.show_warning) {
@@ -408,13 +426,11 @@ export class BoilerplateCard extends LitElement {
         .label=${`Boilerplate: ${this.config || 'No Entity Defined'}`}
       >
         <div class='donder-widget'>
-        ${!this._scene_mode
-          ? entityGroups
-            ? this.renderSwitchGroup(entityGroups)
-            : this.config.entities.map(e => {
-              return this.renderSwitch(e)
-              })
-          : this.renderSceneEditor()
+        ${entityGroups
+          ? this.renderSwitchGroup(entityGroups)
+          : this.config.entities.map(e => {
+            return this.renderSwitch(e)
+            })
         }
       </div>
       </ha-card>
