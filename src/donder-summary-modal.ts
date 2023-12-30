@@ -307,7 +307,7 @@ export class BoilerplateCard extends LitElement {
     }
   }
 
-  protected _toggleEditScene(scene: any) {
+  protected _toggleEditScene(scene?: any) {
     const env = this.hass.states['donder_env.global'].attributes
     this.hass.callService('browser_mod', 'popup', {
       content: {
@@ -367,7 +367,7 @@ export class BoilerplateCard extends LitElement {
                   >${scenes[scene].name}</div>
                 `
               })}
-              <div class="scene" @click=${() => this._scene_mode = true}>
+              <div class="scene" @click=${() => this._toggleCreateScene()}>
                 <div class="add-scene-icon">
                   <svg-item state="plus"></svg-item>
                 </div>

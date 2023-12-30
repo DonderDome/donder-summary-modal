@@ -326,7 +326,7 @@ const G=(t,e)=>"method"===e.kind&&e.descriptor&&!("value"in e.descriptor)?{...e,
                     .actionHandler=${St({hasHold:ft(this.config.hold_action)})}
                   >${s[t].name}</div>
                 `))}
-              <div class="scene" @click=${()=>this._scene_mode=!0}>
+              <div class="scene" @click=${()=>this._toggleCreateScene()}>
                 <div class="add-scene-icon">
                   <svg-item state="plus"></svg-item>
                 </div>
