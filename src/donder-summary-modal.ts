@@ -327,11 +327,6 @@ export class BoilerplateCard extends LitElement {
     })
   }
 
-  protected _toggleCreateScene() {
-    this._current_scene = null;
-    this._scene_mode = !this._scene_mode
-  }
-
   protected renderSwitchGroup(groups: any): any {
     const groupNames = Object.keys(groups)
     const scenes = this.hass.states['donder_scenes.global']?.attributes
@@ -367,9 +362,9 @@ export class BoilerplateCard extends LitElement {
                   >${scenes[scene].name}</div>
                 `
               })}
-              <div class="scene" @click=${() => this._toggleCreateScene()}>
+              <div class="scene" @click=${() => this._toggleEditScene()}>
                 <div class="add-scene-icon">
-                  <svg-item state="plus"></svg-item>
+                  <ha-icon icon='mdi:plus'></ha-icon>
                 </div>
               </div>
             </div>
