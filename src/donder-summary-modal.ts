@@ -331,6 +331,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected _toggleEditScene(scene?: any) {
+    console.log("edit scene")
     const env = this.hass.states['donder_env.global'].attributes
     this.hass.callService('browser_mod', 'popup', {
       content: {
