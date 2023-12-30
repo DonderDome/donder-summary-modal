@@ -307,31 +307,7 @@ export class BoilerplateCard extends LitElement {
     }
   }
 
-  protected closeModal() {
-    const env = this.hass.states['donder_env.global'].attributes
-    this.hass.callService('browser_mod', 'popup', { 
-      content: {
-        type: 'custom:donder-summary-modal',
-        entities: env[this.config.icon],
-        env,
-        showScenes: this.config.name === 'Routines'
-      },
-      left_button: "Close",
-      left_button_action: this.hass.callService('browser_mod', 'close_popup', {browser_id: localStorage.getItem('browser_mod-browser-id')}),
-      browser_id: localStorage.getItem('browser_mod-browser-id'),
-      card_mod: {
-        style:{
-          "ha-dialog$": `div.mdc-dialog div.mdc-dialog__surface {
-            max-width: 90%;
-          }
-          `,
-        }
-      }
-    })
-  }
-
   protected _toggleEditScene(scene?: any) {
-    console.log("edit scene")
     const env = this.hass.states['donder_env.global'].attributes
     this.hass.callService('browser_mod', 'popup', {
       content: {
