@@ -272,6 +272,7 @@ export class BoilerplateCard extends LitElement {
         .step=${20}
         .value=${percentage}
         @change=${(ev) => this.triggerCover(ev, sw) }
+        ignore-bar-touch
       ></ha-slider>
     `
   }

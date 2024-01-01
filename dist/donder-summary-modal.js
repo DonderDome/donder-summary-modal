@@ -298,6 +298,7 @@ const G=(t,e)=>"method"===e.kind&&e.descriptor&&!("value"in e.descriptor)?{...e,
         .step=${20}
         .value=${i}
         @change=${e=>this.triggerCover(e,t)}
+        ignore-bar-touch
       ></ha-slider>
     `}renderToggle(t){const e="on"===this.hass.states[t.entity||""].state;return P`<ha-switch .checked=${e} @action=${()=>this.activateTrigger(t)} .actionHandler=${St({hasHold:_t(this.config.hold_action)})}></ha-switch>`}renderSwitch(t){return P`
       <div class='summary-switch-wrapper'>
