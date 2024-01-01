@@ -257,6 +257,12 @@ export class BoilerplateCard extends LitElement {
     `;
   }
 
+  protected triggerCover(ev: any, sw: any) {
+    const { action } = ev?.detail
+    window.alert(action)
+    this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: ev.target.value})
+  }
+
   protected renderShutters(sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html `
@@ -265,9 +271,7 @@ export class BoilerplateCard extends LitElement {
         .max=${100}
         .step=${20}
         .value=${percentage}
-        @change=${(ev) =>
-            this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: ev.target.value})
-          }
+        @change=${(ev) => this.triggerCover(ev, sw) }
       ></ha-slider>
     `
   }
