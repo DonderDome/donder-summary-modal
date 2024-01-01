@@ -291,7 +291,7 @@ const G=(t,e)=>"method"===e.kind&&e.descriptor&&!("value"in e.descriptor)?{...e,
           padding-right: 0px;
         }
       }
-    `}triggerCover(t,e){window.alert(t.target.value),this.hass.callService("cover","set_cover_position",{entity_id:e.entity,position:t.target.value})}renderShutters(t){var e;const i=null===(e=this.hass.states[t.entity||""].attributes)||void 0===e?void 0:e.current_position;return P`
+    `}triggerCover(t,e){console.log(t),window.alert(t.target.value),this.hass.callService("cover","set_cover_position",{entity_id:e.entity,position:t.target.value})}renderShutters(t){var e;const i=null===(e=this.hass.states[t.entity||""].attributes)||void 0===e?void 0:e.current_position;return P`
       <ha-slider
         .min=${0}
         .max=${100}

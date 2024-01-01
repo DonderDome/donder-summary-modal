@@ -258,6 +258,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected triggerCover(ev: any, sw: any) {
+    console.log(ev)
     window.alert(ev.target.value)
     this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: ev.target.value})
   }
