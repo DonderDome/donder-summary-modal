@@ -258,8 +258,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected triggerCover(ev: any, sw: any) {
-    const { action } = ev?.detail
-    window.alert(action)
+    window.alert(ev.target.value)
     this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: ev.target.value})
   }
 
@@ -272,7 +271,6 @@ export class BoilerplateCard extends LitElement {
         .step=${20}
         .value=${percentage}
         @change=${(ev) => this.triggerCover(ev, sw) }
-        ignore-bar-touch
       ></ha-slider>
     `
   }
