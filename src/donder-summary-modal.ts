@@ -260,10 +260,6 @@ export class BoilerplateCard extends LitElement {
     `;
   }
 
-  protected triggerCover(ev: any, sw: any) {
-    this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: ev.target.value})
-  }
-
   protected throttleUpdate(e: any, sw: any): any {
     if (!this._initiated) {
       this._initiated = true;
@@ -277,7 +273,7 @@ export class BoilerplateCard extends LitElement {
 
     this._throttle = setTimeout(() => {  
       this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
-    })
+    }, 2000)
   }
     
 
