@@ -18,6 +18,7 @@ import {
 } from 'custom-card-helpers'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
 import { CARD_VERSION } from './constants';
 import './editor';
+import './range-slider'
 
 import type { BoilerplateCardConfig, Switch } from './types';
 import { actionHandler } from './action-handler-directive';
@@ -58,6 +59,8 @@ export class BoilerplateCard extends LitElement {
   @state() protected _expanded = false;
   @state() protected _scene_mode = false;
   @state() protected _current_scene = null;
+  @state() protected _throttle;
+  @state() protected _initiated = false;
 
   public setConfig(config: BoilerplateCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
@@ -258,21 +261,45 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected triggerCover(ev: any, sw: any) {
-    console.log(ev)
-    window.alert(ev.target.value)
     this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: ev.target.value})
   }
 
+  protected throttleUpdate(e: any, sw: any): any {
+    if (!this._initiated) {
+      this._initiated = true;
+      return;
+    }
+
+    const [element] = e.composedPath();
+    const next = parseInt(element.value);
+
+    clearTimeout(this._throttle);
+
+    this._throttle = setTimeout(() => {  
+      this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
+    })
+  }
+    
+
   protected renderShutters(sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
-    return html `
-      <ha-slider
+    // return html `
+    //   <ha-slider
+    //     .min=${0}
+    //     .max=${100}
+    //     .step=${20}
+    //     .value=${percentage}
+    //     @change=${(ev) => this.triggerCover(ev, sw) }
+    //   ></ha-slider>
+    // `
+    return html`
+      <range-slider
         .min=${0}
         .max=${100}
         .step=${20}
         .value=${percentage}
-        @change=${(ev) => this.triggerCover(ev, sw) }
-      ></ha-slider>
+        @change=${(e) => this.throttleUpdate(e, sw)}
+      />
     `
   }
 
