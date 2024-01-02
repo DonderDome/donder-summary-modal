@@ -279,15 +279,6 @@ export class BoilerplateCard extends LitElement {
 
   protected renderShutters(sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
-    // return html `
-    //   <ha-slider
-    //     .min=${0}
-    //     .max=${100}
-    //     .step=${20}
-    //     .value=${percentage}
-    //     @change=${(ev) => this.triggerCover(ev, sw) }
-    //   ></ha-slider>
-    // `
     return html`
       <range-slider
         .min=${0}
