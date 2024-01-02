@@ -217,7 +217,7 @@ console.warn("The main 'lit-element' module entrypoint is deprecated. Please upd
     }
 
     .range-slider {
-      background: var(--primary-nackground-color);
+      background: var(--primary-background-color);
       width: 100%;
     }
 

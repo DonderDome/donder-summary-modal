@@ -114,7 +114,7 @@ class RangeSlider extends LitElement {
     }
 
     .range-slider {
-      background: var(--primary-nackground-color);
+      background: var(--primary-background-color);
       width: 100%;
     }
 
