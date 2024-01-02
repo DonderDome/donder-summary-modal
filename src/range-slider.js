@@ -114,13 +114,12 @@ class RangeSlider extends LitElement {
     }
 
     .range-slider {
-      background: var(--slider-background);
+      background: var(--primary-nackground-color);
       width: 100%;
-      outline: 2px solid var(--slider-outline)
     }
 
     .range-slider-value {
-      background: var(--slider-value-color);
+      background: var(--primary-color);
       width: var(--slider-value-width);
     }
 
@@ -129,7 +128,7 @@ class RangeSlider extends LitElement {
       border-radius: 50%;
       height: var(--thumb-diameter);
       position: absolute;
-      transform: translateX(var(--thumb-offset));
+      left: var(--thumb-offset);
       width: var(--thumb-diameter);
     }
 
@@ -192,7 +191,7 @@ class RangeSlider extends LitElement {
     const thumbWidth = this._thumb.offsetWidth;
     const sliderWidth = this._slider.offsetWidth;
     const sliderValueWidth = `${percentage * 100}%`;
-    const thumbOffset = `${(sliderWidth - thumbWidth) * percentage}px`;
+    const thumbOffset = `${(sliderWidth - thumbWidth) * percentage}%`;
 
     this.style.setProperty('--slider-value-width', sliderValueWidth);
     this.style.setProperty('--thumb-offset', thumbOffset);
