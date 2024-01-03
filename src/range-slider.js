@@ -188,10 +188,10 @@ class RangeSlider extends LitElement {
     const min = this.min < this._actualMin ? this._actualMin : this.min;
     const max = this.max > this._actualMax ? this._actualMax : this.max;
     const percentage = (this.value - min) / (max - min);
-    const thumbWidth = this._thumb.offsetWidth;
-    const sliderWidth = this._slider.offsetWidth;
+    // const thumbWidth = this._thumb.offsetWidth;
+    // const sliderWidth = this._slider.offsetWidth;
     const sliderValueWidth = `${percentage * 100}%`;
-    const thumbOffset = `${(sliderWidth - thumbWidth) * percentage}%`;
+    const thumbOffset = `${percentage}%`;
 
     this.style.setProperty('--slider-value-width', sliderValueWidth);
     this.style.setProperty('--thumb-offset', thumbOffset);
