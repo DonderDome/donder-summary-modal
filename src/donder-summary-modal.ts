@@ -261,6 +261,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected throttleUpdate(e: any, sw: any): any {
+    // blocking action on initial load
     if (!this._initiated) {
       this._initiated = true;
       return;
