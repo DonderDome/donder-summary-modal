@@ -128,7 +128,7 @@ class RangeSlider extends LitElement {
       border-radius: 50%;
       height: var(--thumb-diameter);
       position: absolute;
-      left: var(--thumb-offset);
+      left: calc(100% - (var(--thumb-diameter))/2);
       width: var(--thumb-diameter);
     }
 
