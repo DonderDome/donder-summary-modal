@@ -223,7 +223,7 @@ export class BoilerplateCard extends LitElement {
         width: 30px;
       }
       .scene {
-        font-weight: 200;
+        /* font-weight: 200;
         color: rgb(255, 255, 255);
         box-sizing: border-box;
         background: url("/local/donder/assets/cctv_frame_fat.svg") no-repeat;
@@ -237,7 +237,15 @@ export class BoilerplateCard extends LitElement {
         align-items: center;
         line-height: 1.1em;
         margin: 5px;
-        justify-content: center;
+        justify-content: center; */
+        background-color: transparent;
+        color: var(--text-primary-color);
+        padding: 5px 22px 15px;
+        box-sizing: border-box;
+        text-align: center;
+        border-radius: var(--smaller-border-radius);
+        font-size: 10px;
+        text-transform: uppercase;
       }
       .add-scene-icon {
         width: 40px;
