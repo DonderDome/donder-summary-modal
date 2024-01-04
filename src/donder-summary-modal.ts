@@ -271,7 +271,8 @@ export class BoilerplateCard extends LitElement {
     clearTimeout(this._throttle);
 
     this._throttle = setTimeout(() => {  
-      console.log("throttle", next);
+      console.log("throttles", next);
+      
       this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
     }, 2000)
   }
