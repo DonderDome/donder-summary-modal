@@ -60,7 +60,7 @@ export class BoilerplateCard extends LitElement {
   @state() protected _scene_mode = false;
   @state() protected _current_scene = null;
   @state() protected _throttle;
-  @state() protected _initiated = false;
+  @state() protected _initiated = {};
 
   public setConfig(config: BoilerplateCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
@@ -258,10 +258,10 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected throttleUpdate(e: any, sw: any): any {
-    console.log("initiated", this._initiated);
+    console.log("initiated", this._initiated[sw.entity]);
     // blocking action on initial load
-    if (!this._initiated) {
-      this._initiated = true;
+    if (!this._initiated[sw.entity]) {
+      this._initiated[sw.entity] = true;
       return;
     }
 
@@ -272,7 +272,7 @@ export class BoilerplateCard extends LitElement {
 
     this._throttle = setTimeout(() => {  
       console.log("throttles", next);
-      
+
       this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
     }, 2000)
   }
