@@ -354,7 +354,7 @@ console.warn("The main 'lit-element' module entrypoint is deprecated. Please upd
         line-height: 1.1em;
         margin: 5px;
         justify-content: center; */
-        background-color: transparent;
+        background-color: var(--ha-card-background);
         color: var(--text-primary-color);
         padding: 5px 22px 15px;
         box-sizing: border-box;
