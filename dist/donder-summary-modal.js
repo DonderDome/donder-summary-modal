@@ -370,7 +370,7 @@ console.warn("The main 'lit-element' module entrypoint is deprecated. Please upd
           padding-right: 0px;
         }
       }
-    `}throttleUpdate(t,e){if(!this._initiated)return void(this._initiated=!0);const[i]=t.composedPath(),s=parseInt(i.value);clearTimeout(this._throttle),this._throttle=setTimeout((()=>{console.log("throttle",s),this.hass.callService("cover","set_cover_position",{entity_id:e.entity,position:s})}),2e3)}renderShutters(t){var e;const i=null===(e=this.hass.states[t.entity||""].attributes)||void 0===e?void 0:e.current_position;return O`
+    `}throttleUpdate(t,e){if(console.log("initiated",this._initiated),!this._initiated)return void(this._initiated=!0);const[i]=t.composedPath(),s=parseInt(i.value);clearTimeout(this._throttle),this._throttle=setTimeout((()=>{console.log("throttle",s),this.hass.callService("cover","set_cover_position",{entity_id:e.entity,position:s})}),2e3)}renderShutters(t){var e;const i=null===(e=this.hass.states[t.entity||""].attributes)||void 0===e?void 0:e.current_position;return O`
       <range-slider
         .min=${0}
         .max=${100}
