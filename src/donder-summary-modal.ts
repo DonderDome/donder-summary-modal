@@ -223,29 +223,18 @@ export class BoilerplateCard extends LitElement {
         width: 30px;
       }
       .scene {
-        /* font-weight: 200;
-        color: rgb(255, 255, 255);
-        box-sizing: border-box;
-        background: url("/local/donder/assets/cctv_frame_fat.svg") no-repeat;
-        text-align: center;
-        font-size: 0.8em;
-        padding: 0px;
-        width: 70px;
-        height: 70px;
-        display: flex;
-        align-content: center;
-        align-items: center;
-        line-height: 1.1em;
-        margin: 5px;
-        justify-content: center; */
         background-color: var(--ha-card-background);
         color: var(--text-primary-color);
-        padding: 5px 22px 15px;
+        padding: 15px 22px;
         box-sizing: border-box;
         text-align: center;
-        border-radius: var(--smaller-border-radius);
+        border-radius: var(--scene-border-radius);
         font-size: 10px;
         text-transform: uppercase;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 5px;
       }
       .add-scene-icon {
         width: 40px;
