@@ -258,7 +258,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected throttleUpdate(e: any, sw: any): any {
-    console.log("initiated", this._initiated[sw.entity]);
+    console.log("initiated", this._initiated[sw.entity], sw.entity);
     // blocking action on initial load
     if (!this._initiated[sw.entity]) {
       this._initiated[sw.entity] = true;
@@ -271,8 +271,6 @@ export class BoilerplateCard extends LitElement {
     clearTimeout(this._throttle);
 
     this._throttle = setTimeout(() => {  
-      console.log("throttles", next);
-
       this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
     }, 2000)
   }
@@ -283,7 +281,7 @@ export class BoilerplateCard extends LitElement {
       <range-slider
         .min=${0}
         .max=${100}
-        .step=${20}
+        .step=${5}
         .value=${percentage}
         @change=${(e) => this.throttleUpdate(e, sw)}
       />
