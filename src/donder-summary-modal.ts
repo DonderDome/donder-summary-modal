@@ -272,7 +272,7 @@ export class BoilerplateCard extends LitElement {
     clearTimeout(this._throttle);
     
     this._throttle = setTimeout(() => {
-      window.alert(`triggered service ${percentage} -> ${next}, ${element}`)
+      window.alert(`triggered service ${percentage} -> ${next}, ${element}, ${element.value}`)
       this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
     }, 2000)
   }
