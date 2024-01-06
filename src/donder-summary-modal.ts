@@ -86,7 +86,6 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected hasConfigOrEntityChanged(element: any, changedProps: PropertyValues, forceUpdate: boolean): boolean {
-    console.log("hasconfigorentitychanged");
     if (changedProps.has('config') || forceUpdate) {
       return true;
     }
@@ -103,11 +102,9 @@ export class BoilerplateCard extends LitElement {
             break
           }
         }
-        console.log("hasChanged", hasChanged);
         return hasChanged
       }
-      console.log("no old hass");
-      return false;
+      return true;
     } else {
       return false;
     }
