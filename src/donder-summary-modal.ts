@@ -259,6 +259,7 @@ export class BoilerplateCard extends LitElement {
 
   protected throttleUpdate(e: any, sw: any): any {
     console.log("initiated", this._initiated[sw.entity], sw.entity);
+    const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     // blocking action on initial load
     if (!this._initiated[sw.entity]) {
       this._initiated[sw.entity] = true;
@@ -269,9 +270,9 @@ export class BoilerplateCard extends LitElement {
     const next = parseInt(element.value);
 
     clearTimeout(this._throttle);
-
+    
     this._throttle = setTimeout(() => {
-      console.log("triggered service")
+      console.log("triggered service", percentage, next)
       this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
     }, 2000)
   }
