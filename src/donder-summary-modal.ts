@@ -258,7 +258,6 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected throttleUpdate(e: any, sw: any): any {
-    console.log("initiated", this._initiated[sw.entity], sw.entity);
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     // blocking action on initial load
     if (!this._initiated[sw.entity]) {
@@ -269,6 +268,11 @@ export class BoilerplateCard extends LitElement {
     const [element] = e.composedPath();
     const next = parseInt(element.value);
 
+
+    if (percentage === next) {
+      return;
+    }
+    
     clearTimeout(this._throttle);
     
     this._throttle = setTimeout(() => {
