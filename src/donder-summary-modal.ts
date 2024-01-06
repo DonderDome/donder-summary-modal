@@ -432,15 +432,7 @@ export class BoilerplateCard extends LitElement {
     }, {});
 
     return html`
-      <ha-card
-        @action=${this._handleAction}
-        .actionHandler=${actionHandler({
-          hasHold: hasAction(this.config.hold_action),
-          hasDoubleClick: hasAction(this.config.double_tap_action),
-        })}
-        tabindex="0"
-        .label=${`Boilerplate: ${this.config || 'No Entity Defined'}`}
-      >
+      <ha-card>
         <div class='donder-widget'>
         ${entityGroups
           ? this.renderSwitchGroup(entityGroups)
