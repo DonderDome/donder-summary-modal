@@ -86,6 +86,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected hasConfigOrEntityChanged(element: any, changedProps: PropertyValues, forceUpdate: boolean): boolean {
+    console.log("hasconfigorentitychanged");
     if (changedProps.has('config') || forceUpdate) {
       return true;
     }
@@ -102,9 +103,11 @@ export class BoilerplateCard extends LitElement {
             break
           }
         }
+        console.log("hasChanged", hasChanged);
         return hasChanged
       }
-      return true;
+      console.log("no old hass");
+      return false;
     } else {
       return false;
     }
@@ -276,7 +279,6 @@ export class BoilerplateCard extends LitElement {
     clearTimeout(this._throttle);
     
     this._throttle = setTimeout(() => {
-      window.alert(`!!${element.innerHTML} ${element[0]?.innerHTML} ${element.outerHTML} ${element[0]?.outerHTML}`)
       this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
     }, 2000)
   }
