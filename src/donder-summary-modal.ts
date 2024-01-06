@@ -259,7 +259,7 @@ export class BoilerplateCard extends LitElement {
 
   protected throttleUpdate(e: any, sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
-    // blocking action on initial load
+
     if (!this._initiated[sw.entity]) {
       this._initiated[sw.entity] = true;
       return;
