@@ -258,39 +258,59 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected throttleUpdate(e: any, sw: any): any {
-    const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
+    const target = e.target;
 
     if (!this._initiated[sw.entity]) {
       this._initiated[sw.entity] = true;
       return;
     }
+    if (!target)
+        return;
 
-    const [element] = e.composedPath();
-    const next = parseInt(element.value);
+    const value = (target as HTMLInputElement).value;
+    const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
 
-
-    if (percentage === next) {
-      return;
+    if (value != null && value !== percentage) {
+      this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: value})
     }
+
     
-    clearTimeout(this._throttle);
+
+    // const [element] = e.composedPath();
+    // const next = parseInt(element.value);
+
+
+    // if (percentage === next) {
+    //   return;
+    // }
     
-    this._throttle = setTimeout(() => {
-      this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
-    }, 2000)
+    // clearTimeout(this._throttle);
+    
+    // this._throttle = setTimeout(() => {
+    //   this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
+    // }, 2000)
   }
     
   protected renderShutters(sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html`
-      <range-slider
+      <ha-slider pin ignore-bar-touch
+        class="brightness-slider"
         .min=${0}
         .max=${100}
         .step=${5}
+        .disabled=${false}
         .value=${percentage}
-        @change=${(e) => this.throttleUpdate(e, sw)}
-      />
-    `
+        @change=${(ev: Event) => this.throttleUpdate(ev, sw)}
+      ></ha-slider>`;
+    //   <range-slider
+    //     .min=${0}
+    //     .max=${100}
+    //     .step=${5}
+    //     .value=${percentage}
+    //     @change=${(e) => this.throttleUpdate(e, sw)}
+    //   />
+    // `
   }
 
   protected renderToggle(sw: any): any {
