@@ -360,7 +360,7 @@ console.warn("The main 'lit-element' module entrypoint is deprecated. Please upd
       }
       @media (max-width: 600px) {
         .donder-widget {
-          padding: 0px 10px 0px 20px;
+          padding: 0px 0px 0px 10px;
         }
         .summary-switch-name {
           font-size: .9rem;
