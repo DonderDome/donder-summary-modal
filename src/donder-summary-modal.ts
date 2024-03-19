@@ -365,7 +365,7 @@ export class BoilerplateCard extends LitElement {
           ...env.shutters || [],
           ...env.switches || [],
         ],
-        locked: true,
+        locked: scene ? false : true,
         sceneName: this.config.scene,
         scene: scene ? this.hass.states['donder_scenes.global'].attributes[scene] : null,
         closeModal: true,
