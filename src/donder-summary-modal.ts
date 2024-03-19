@@ -362,8 +362,8 @@ export class BoilerplateCard extends LitElement {
         isNew: !scene,
         sensors: env.sensors,
         devices: [
-          ...env.shutters,
-          ...env.switches
+          ...env.shutters || [],
+          ...env.switches || [],
         ],
         locked: true,
         sceneName: this.config.scene,
