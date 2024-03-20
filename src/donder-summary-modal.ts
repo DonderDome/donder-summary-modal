@@ -354,7 +354,6 @@ export class BoilerplateCard extends LitElement {
   }
 
   protected _toggleEditScene(scene?: any) {
-    console.log(scene)
     const env = this.hass.states['donder_env.global'].attributes
     this.hass.callService('browser_mod', 'popup', {
       content: {
@@ -366,7 +365,7 @@ export class BoilerplateCard extends LitElement {
           ...env.shutters || [],
           ...env.switches || [],
         ],
-        locked: scene ? false : true,
+        locked: scene ? true : false,
         sceneName: this.config.scene,
         scene: scene ? this.hass.states['donder_scenes.global'].attributes[scene] : null,
         closeModal: true,
