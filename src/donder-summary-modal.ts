@@ -266,6 +266,7 @@ export class BoilerplateCard extends LitElement {
   protected throttleUpdate(e: any, sw: any): any {
     const target = e.target;
 
+      
     if (!this._initiated[sw.entity]) {
       this._initiated[sw.entity] = true;
       return;
@@ -300,23 +301,14 @@ export class BoilerplateCard extends LitElement {
   protected renderShutters(sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html`
-      <ha-slider pin ignore-bar-touch
-        class="brightness-slider"
+      <range-slider
         .min=${0}
         .max=${100}
         .step=${5}
-        .disabled=${false}
         .value=${percentage}
-        @change=${(ev: Event) => this.throttleUpdate(ev, sw)}
-      ></ha-slider>`;
-    //   <range-slider
-    //     .min=${0}
-    //     .max=${100}
-    //     .step=${5}
-    //     .value=${percentage}
-    //     @change=${(e) => this.throttleUpdate(e, sw)}
-    //   />
-    // `
+        @change=${(e) => this.throttleUpdate(e, sw)}
+      />
+    `
   }
 
   protected renderToggle(sw: any): any {

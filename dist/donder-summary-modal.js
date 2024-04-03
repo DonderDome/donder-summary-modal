@@ -377,15 +377,14 @@ console.warn("The main 'lit-element' module entrypoint is deprecated. Please upd
         }
       }
     `}throttleUpdate(t,e){var i;const s=t.target;if(!this._initiated[e.entity])return void(this._initiated[e.entity]=!0);if(!s)return;const o=s.value,n=null===(i=this.hass.states[e.entity||""].attributes)||void 0===i?void 0:i.current_position;null!=o&&o!==n&&this.hass.callService("cover","set_cover_position",{entity_id:e.entity,position:o})}renderShutters(t){var e;const i=null===(e=this.hass.states[t.entity||""].attributes)||void 0===e?void 0:e.current_position;return O`
-      <ha-slider pin ignore-bar-touch
-        class="brightness-slider"
+      <range-slider
         .min=${0}
         .max=${100}
         .step=${5}
-        .disabled=${!1}
         .value=${i}
         @change=${e=>this.throttleUpdate(e,t)}
-      ></ha-slider>`}renderToggle(t){const e="on"===this.hass.states[t.entity||""].state;return O`<ha-switch .checked=${e} @action=${()=>this.activateTrigger(t)} .actionHandler=${St({hasHold:ft(this.config.hold_action)})}></ha-switch>`}renderSwitch(t){return O`
+      />
+    `}renderToggle(t){const e="on"===this.hass.states[t.entity||""].state;return O`<ha-switch .checked=${e} @action=${()=>this.activateTrigger(t)} .actionHandler=${St({hasHold:ft(this.config.hold_action)})}></ha-switch>`}renderSwitch(t){return O`
       <div class='summary-switch-wrapper'>
         <div class='summary-switch-name'>${t.name}</div>
         <div class='summary-switches'>
