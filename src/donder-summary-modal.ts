@@ -274,28 +274,16 @@ export class BoilerplateCard extends LitElement {
     if (!target)
         return;
 
-    const value = (target as HTMLInputElement).value;
-    const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
-
-    if (value != null && value !== percentage) {
-      this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: value})
-    }
-
+    clearTimeout(this._throttle);
     
+    this._throttle = setTimeout(() => {
+      const value = (target as HTMLInputElement).value;
+      const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
 
-    // const [element] = e.composedPath();
-    // const next = parseInt(element.value);
-
-
-    // if (percentage === next) {
-    //   return;
-    // }
-    
-    // clearTimeout(this._throttle);
-    
-    // this._throttle = setTimeout(() => {
-    //   this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: next})
-    // }, 2000)
+      if (value != null && value !== percentage) {
+        this.hass.callService('cover', 'set_cover_position', {entity_id: sw.entity, position: value})
+      }
+    }, 2000);
   }
     
   protected renderShutters(sw: any): any {

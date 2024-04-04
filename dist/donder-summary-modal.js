@@ -376,7 +376,7 @@ console.warn("The main 'lit-element' module entrypoint is deprecated. Please upd
           padding-right: 0px;
         }
       }
-    `}throttleUpdate(t,e){var i;const s=t.target;if(!this._initiated[e.entity])return void(this._initiated[e.entity]=!0);if(!s)return;const o=s.value,n=null===(i=this.hass.states[e.entity||""].attributes)||void 0===i?void 0:i.current_position;null!=o&&o!==n&&this.hass.callService("cover","set_cover_position",{entity_id:e.entity,position:o})}renderShutters(t){var e;const i=null===(e=this.hass.states[t.entity||""].attributes)||void 0===e?void 0:e.current_position;return O`
+    `}throttleUpdate(t,e){const i=t.target;this._initiated[e.entity]?i&&(clearTimeout(this._throttle),this._throttle=setTimeout((()=>{var t;const s=i.value,o=null===(t=this.hass.states[e.entity||""].attributes)||void 0===t?void 0:t.current_position;null!=s&&s!==o&&this.hass.callService("cover","set_cover_position",{entity_id:e.entity,position:s})}),2e3)):this._initiated[e.entity]=!0}renderShutters(t){var e;const i=null===(e=this.hass.states[t.entity||""].attributes)||void 0===e?void 0:e.current_position;return O`
       <range-slider
         .min=${0}
         .max=${100}
