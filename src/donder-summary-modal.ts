@@ -291,6 +291,9 @@ export class BoilerplateCard extends LitElement {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html`
       <ha-slider pin ignore-bar-touch
+        .actionHandler=${actionHandler({
+          hasHold: hasAction(this.config.hold_action),
+        })}
         class="brightness-slider"
         .min=${0}
         .max=${100}
