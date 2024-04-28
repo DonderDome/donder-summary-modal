@@ -290,7 +290,7 @@ export class BoilerplateCard extends LitElement {
   protected renderShutters(sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html`
-      <ha-slider pin ignore-bar-touch
+      <!-- <ha-slider pin ignore-bar-touch
         @action=${this._handleAction}
         .actionHandler=${actionHandler({
           hasHold: hasAction(this.config.hold_action),
@@ -301,7 +301,18 @@ export class BoilerplateCard extends LitElement {
         .step=${5}
         .value=${percentage}
         @change=${(e) => this.throttleUpdate(e, sw)}
-      />
+      /> -->
+      <ha-control-slider
+        vertical
+        .value=${percentage}
+        min="0"
+        max="100"
+        show-handle
+        mode="end"
+        @value-changed=${(e) => this.throttleUpdate(e, sw)}
+      >
+
+      </ha-control-slider>
     `
   }
 
