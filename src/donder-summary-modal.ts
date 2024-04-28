@@ -286,7 +286,7 @@ export class BoilerplateCard extends LitElement {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html`
       <ha-control-slider
-        style=${`{max-height: 30px;}`}
+        style=${`max-height: 30px;`}
         .value=${percentage}
         min="0"
         max="100"
