@@ -111,6 +111,7 @@ export class BoilerplateCard extends LitElement {
   }
 
   private _handleAction(ev: ActionHandlerEvent): void {
+    console.log('handleAction', ev.detail.action)
     if (this.hass && this.config && ev.detail.action) {
       handleAction(this, this.hass, this.config, ev.detail.action);
     }
@@ -178,13 +179,13 @@ export class BoilerplateCard extends LitElement {
         padding-right: 30px;
         padding-top: 5px;
         opacity: .8;
-        flex: 1;
+        flex: 2;
       }
       .summary-switches {
         display: flex;
         flex-direction: row;
-        flex: 1;
-        justify-content: flex-end;
+        flex: 3;
+        justify-content: center;
         align-items: end;
       }
       .summary-switches shutter-slider {
@@ -289,13 +290,22 @@ export class BoilerplateCard extends LitElement {
   protected renderShutters(sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html`
-      <range-slider
-        .min=${0}
-        .max=${100}
-        .step=${5}
-        .value=${percentage}
-        @change=${(e) => this.throttleUpdate(e, sw)}
-      />
+      <ha-card
+        @action=${this._handleAction}
+        .actionHandler=${actionHandler({
+          hasHold: hasAction(this.config.hold_action),
+        })}
+        tabindex="0"
+        .label=${`Boilerplate: ${this.config || 'No Entity Defined'}`}
+      >
+        <range-slider
+          .min=${0}
+          .max=${100}
+          .step=${5}
+          .value=${percentage}
+          @change=${(e) => this.throttleUpdate(e, sw)}
+        />
+    </ha-card>
     `
   }
 
