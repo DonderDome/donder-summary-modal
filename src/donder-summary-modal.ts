@@ -303,12 +303,10 @@ export class BoilerplateCard extends LitElement {
         @change=${(e) => this.throttleUpdate(e, sw)}
       /> -->
       <ha-control-slider
-        vertical
         .value=${percentage}
         min="0"
         max="100"
-        show-handle
-        mode="end"
+        mode="start"
         @value-changed=${(e) => this.throttleUpdate(e, sw)}
       >
 
