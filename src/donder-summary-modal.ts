@@ -267,11 +267,6 @@ export class BoilerplateCard extends LitElement {
   protected throttleUpdate(e: any, sw: any): any {
     const target = e.target;
 
-      
-    if (!this._initiated[sw.entity]) {
-      this._initiated[sw.entity] = true;
-      return;
-    }
     if (!target)
         return;
 
