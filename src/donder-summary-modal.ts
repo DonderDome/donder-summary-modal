@@ -59,7 +59,7 @@ export class BoilerplateCard extends LitElement {
   @state() protected _expanded = false;
   @state() protected _scene_mode = false;
   @state() protected _current_scene = null;
-  @state() protected _throttle;
+  @state() protected _throttle = {};
   @state() protected _initiated = {};
 
   public setConfig(config: BoilerplateCardConfig): void {
@@ -270,9 +270,9 @@ export class BoilerplateCard extends LitElement {
     if (!target)
         return;
 
-    clearTimeout(this._throttle);
+    clearTimeout(this._throttle[sw.entity]);
     
-    this._throttle = setTimeout(() => {
+    this._throttle[sw.entity] = setTimeout(() => {
       const value = (target as HTMLInputElement).value;
       const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
 
