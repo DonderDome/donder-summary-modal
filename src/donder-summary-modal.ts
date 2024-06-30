@@ -171,22 +171,30 @@ export class BoilerplateCard extends LitElement {
         border-radius: var(--ha-card-border-radius)
       }
       .summary-switch-wrapper {
-        display: flex;
+        /* display: flex; */
+        position: relative;
         padding: 10px 0 1px;
-        font-size: 1.2rem;
+        /* font-size: 1.2rem; */
       }
       .summary-switch-name {
         padding-right: 30px;
         padding-top: 5px;
         opacity: .8;
-        flex: 2;
+        /* flex: 2; */
+        position: absolute;
+        top: 20px;
+        left: 10px;
+        color: black;
+        z-index: 10;
+        text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+        pointer-events: none;
       }
       .summary-switches {
-        display: flex;
+        /* display: flex;
         flex-direction: row;
         flex: 3;
         justify-content: center;
-        align-items: end;
+        align-items: end; */
       }
       .summary-switches shutter-slider {
         flex: 1;
@@ -205,13 +213,13 @@ export class BoilerplateCard extends LitElement {
       }
       .summary-group-wrapper {
         box-sizing: border-box;
-        margin-bottom: 40px;
+        margin-bottom: 20px;
         flex: 1 0 50%;
         max-width: 50%;
       }
       .summary-group-wrapper .summary-group-name {
         opacity: .6;
-        margin-bottom: 10px;
+        /* margin-bottom: 10px; */
         font-size: .8em;
       }
       .summary-group-wrapper:nth-child(even) {
@@ -286,7 +294,6 @@ export class BoilerplateCard extends LitElement {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html`
       <ha-control-slider
-        style=${`max-height: 30px;`}
         .value=${percentage}
         min="0"
         max="100"
