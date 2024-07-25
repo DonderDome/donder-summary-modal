@@ -214,7 +214,7 @@ export class BoilerplateCard extends LitElement {
         left: 10px;
         color: white;
         z-index: 10;
-        text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+        /* text-shadow: 1px 1px 0px rgba(0,0,0,0.3); */
         pointer-events: none;
       }
       .summary-shutter-wrapper {
