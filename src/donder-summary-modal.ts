@@ -213,11 +213,11 @@ export class BoilerplateCard extends LitElement {
         z-index: 10;
         text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
         pointer-events: none;
-        margin-top: 20px;
       }
       .summary-shutter-wrapper {
         width: 100%;
         position: relative;
+        margin-top: 20px;
       }
       .summary-group-wrapper {
         box-sizing: border-box;
