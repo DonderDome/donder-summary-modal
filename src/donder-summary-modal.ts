@@ -178,13 +178,13 @@ export class BoilerplateCard extends LitElement {
       }
       .summary-switch-name {
         padding-right: 30px;
-        padding-top: 5px;
+        /* padding-top: 5px; */
         opacity: .8;
         /* flex: 2; */
         position: absolute;
         top: 20px;
         left: 10px;
-        color: black;
+        color: white;
         z-index: 10;
         text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
         pointer-events: none;
