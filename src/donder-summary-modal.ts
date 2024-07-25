@@ -171,30 +171,22 @@ export class BoilerplateCard extends LitElement {
         border-radius: var(--ha-card-border-radius)
       }
       .summary-switch-wrapper {
-        /* display: flex; */
-        position: relative;
-        padding: 10px 0 1px;
-        /* font-size: 1.2rem; */
+        display: flex;
+        padding: 10px 0px 1px;
+        font-size: 1.2rem;
       }
       .summary-switch-name {
         padding-right: 30px;
-        /* padding-top: 5px; */
-        opacity: .8;
-        /* flex: 2; */
-        position: absolute;
-        top: 20px;
-        left: 10px;
-        color: white;
-        z-index: 10;
-        text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
-        pointer-events: none;
+        padding-top: 5px;
+        opacity: 0.8;
+        flex: 3 1 0%;
       }
       .summary-switches {
-        /* display: flex;
+        display: flex;
         flex-direction: row;
-        flex: 3;
+        flex: 3 1 0%;
         justify-content: center;
-        align-items: end; */
+        align-items: center;
       }
       .summary-switches shutter-slider {
         flex: 1;
