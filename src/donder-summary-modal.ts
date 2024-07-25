@@ -188,9 +188,9 @@ export class BoilerplateCard extends LitElement {
         justify-content: center;
         align-items: center;
       }
-      .summary-switches shutter-slider {
+      /* .summary-switches shutter-slider {
         flex: 1;
-      }
+      } */
       .summary-switch {
         width: 30px;
         color: #ccc;
@@ -202,6 +202,23 @@ export class BoilerplateCard extends LitElement {
         transform: rotate(180deg);
         position: relative;
         top: -6px;
+      }
+      .entity .summary-shutter-name {
+        padding-right: 30px;
+        /* padding-top: 5px; */
+        opacity: .8;
+        /* flex: 2; */
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: black;
+        z-index: 10;
+        text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+        pointer-events: none;
+      }
+      .summary-shutter-wrapper {
+        width: 100%;
+        position: relative;
       }
       .summary-group-wrapper {
         box-sizing: border-box;
@@ -285,37 +302,43 @@ export class BoilerplateCard extends LitElement {
   protected renderShutters(sw: any): any {
     const percentage = this.hass.states[sw.entity || ''].attributes?.current_position
     return html`
-      <ha-control-slider
-        .value=${percentage}
-        min="0"
-        max="100"
-        mode="start"
-        @value-changed=${(e) => this.throttleUpdate(e, sw)}
-      >
-
-      </ha-control-slider>
+      <div class='summary-shutter-wrapper'>
+        <div class='summary-shutter-name'>${sw.name}</div>
+        <div class='summary-shutter'>
+          <ha-control-slider
+          .value=${percentage}
+          min="0"
+          max="100"
+          mode="start"
+          @value-changed=${(e) => this.throttleUpdate(e, sw)}
+        ></ha-control-slider>   
+        </div>
+      </div>
+      
     `
   }
 
   protected renderToggle(sw: any): any {
     const isOn = this.hass.states[sw.entity || ''].state === 'on'
 
-    return html `<ha-switch .checked=${isOn} @action=${() => this.activateTrigger(sw)} .actionHandler=${actionHandler({
-      hasHold: hasAction(this.config.hold_action),
-    })}></ha-switch>`
+    return html `
+      <div class='summary-switch-wrapper'>
+        <div class='summary-switch-name'>${sw.name}</div>
+        <div class='summary-switches'>
+          <ha-switch .checked=${isOn} @action=${() => this.activateTrigger(sw)} .actionHandler=${actionHandler({
+            hasHold: hasAction(this.config.hold_action),
+          })}></ha-switch>      
+        </div>
+      </div>
+    `
   }
 
   protected renderSwitch(sw: any): any {
     return html`
-      <div class='summary-switch-wrapper'>
-        <div class='summary-switch-name'>${sw.name}</div>
-        <div class='summary-switches'>
-          ${sw.type === 'shutters'
-            ? this.renderShutters(sw)
-            : this.renderToggle(sw)
-          }
-        </div>
-      </div>
+      ${sw.type === 'shutters'
+        ? this.renderShutters(sw)
+        : this.renderToggle(sw)
+      }
     `
   }
 
