@@ -203,7 +203,7 @@ export class BoilerplateCard extends LitElement {
         position: relative;
         top: -6px;
       }
-      .entity .summary-shutter-name {
+      .summary-shutter-name {
         padding-right: 30px;
         /* padding-top: 5px; */
         opacity: .8;
