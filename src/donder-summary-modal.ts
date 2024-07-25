@@ -373,7 +373,7 @@ export class BoilerplateCard extends LitElement {
         scene: scene ? this.hass.states['donder_scenes.global'].attributes[scene] : null,
         closeModal: true,
       },
-      size: "wide",
+      size: "normal",
       browser_id: localStorage.getItem('browser_mod-browser-id'),
     })
   }
