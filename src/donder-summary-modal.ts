@@ -205,9 +205,7 @@ export class BoilerplateCard extends LitElement {
       }
       .summary-shutter-name {
         padding-right: 30px;
-        /* padding-top: 5px; */
         opacity: .8;
-        /* flex: 2; */
         position: absolute;
         top: 10px;
         left: 10px;
@@ -215,6 +213,7 @@ export class BoilerplateCard extends LitElement {
         z-index: 10;
         text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
         pointer-events: none;
+        margin-top: 20px;
       }
       .summary-shutter-wrapper {
         width: 100%;
