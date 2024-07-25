@@ -173,7 +173,7 @@ export class BoilerplateCard extends LitElement {
       .summary-switch-wrapper {
         display: flex;
         padding: 10px 0px 1px;
-        font-size: 1.2rem;
+        /* font-size: 1.2rem; */
       }
       .summary-switch-name {
         padding-right: 30px;

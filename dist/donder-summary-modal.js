@@ -288,7 +288,7 @@ console.warn("The main 'lit-element' module entrypoint is deprecated. Please upd
       .summary-switch-wrapper {
         display: flex;
         padding: 10px 0px 1px;
-        font-size: 1.2rem;
+        /* font-size: 1.2rem; */
       }
       .summary-switch-name {
         padding-right: 30px;
