@@ -175,6 +175,9 @@ export class BoilerplateCard extends LitElement {
         padding: 10px 0px 1px;
         /* font-size: 1.2rem; */
       }
+      .summary-shutter-wrapper ha-control-slider {
+        --control-slider-background: #fff;
+      }
       .summary-switch-name {
         padding-right: 30px;
         padding-top: 5px;
@@ -205,11 +208,11 @@ export class BoilerplateCard extends LitElement {
       }
       .summary-shutter-name {
         padding-right: 30px;
-        opacity: .8;
+        /* opacity: .8; */
         position: absolute;
         top: 10px;
         left: 10px;
-        color: black;
+        color: white;
         z-index: 10;
         text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
         pointer-events: none;
