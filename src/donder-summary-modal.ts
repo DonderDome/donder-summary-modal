@@ -255,12 +255,14 @@ export class BoilerplateCard extends LitElement {
         justify-content: center;
         align-items: center;
         margin-right: 5px;
+        margin-top: 5px;
       }
       .add-scene-icon {
         width: 40px;
       }
       .summary-group-scenes {
         display: flex;
+        flex-wrap: wrap;
       }
       @media (max-width: 600px) {
         .donder-widget {
@@ -312,6 +314,7 @@ export class BoilerplateCard extends LitElement {
           min="0"
           max="100"
           mode="start"
+          step="5"
           @value-changed=${(e) => this.throttleUpdate(e, sw)}
         ></ha-control-slider>   
         </div>
