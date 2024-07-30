@@ -386,7 +386,7 @@ export class BoilerplateCard extends LitElement {
     const scenes = this.hass.states['donder_scenes.global']?.attributes
     const sceneKeys = Object.keys(scenes)
     const scenesToRemove = ["awake", "sleep"];
-    const filteredSceneKeys = sceneKeys.filter((item) => !scenesToRemove.includes(item));
+    const filteredSceneKeys = sceneKeys.filter((item) => !scenesToRemove.includes(item) && !scenes[item].group);
 
     return html`
       ${groupNames.map(group => {
