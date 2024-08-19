@@ -256,6 +256,17 @@ export class BoilerplateCard extends LitElement {
         align-items: center;
         margin-right: 5px;
         margin-top: 5px;
+        position: relative;
+      }
+      .scene.schedule::after {
+        content: " ";
+        position: absolute;
+        bottom: 0;
+        right: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
       }
       .add-scene-icon {
         width: 40px;
@@ -409,7 +420,7 @@ export class BoilerplateCard extends LitElement {
                 return html`
                   <div
                     @action=${(e) => this._handleSceneAction(e, scene)}
-                    class="scene"
+                    class=${`scene ${scenes[scene].schedule ? 'schedule' : ''}`}
                     .actionHandler=${actionHandler({
                       hasHold: hasAction(this.config.hold_action),
                     })}
