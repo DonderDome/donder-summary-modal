@@ -261,8 +261,8 @@ export class BoilerplateCard extends LitElement {
       .scene.schedule::after {
         content: " ";
         position: absolute;
-        bottom: 0;
-        right: 5px;
+        top: 5px;
+        left: 5px;
         width: 10px;
         height: 10px;
         border-radius: 50%;
