@@ -272,7 +272,7 @@ export class BoilerplateCard extends LitElement {
         margin-top: 5px;
         position: relative;
       }
-      .scene.schedule::before {
+      .scene::before {
         content: " ";
         position: absolute;
         top: 0;
