@@ -360,7 +360,7 @@ export class BoilerplateCard extends LitElement {
 
   protected _handleSceneAction(ev: ActionHandlerEvent, scene): void {
     const { action } = ev?.detail
-    console.log(action)
+    console.log("event", action)
     if (action === 'hold') {
       this._toggleEditScene(scene)
     }
