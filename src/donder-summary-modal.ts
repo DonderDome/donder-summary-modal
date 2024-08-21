@@ -433,10 +433,10 @@ export class BoilerplateCard extends LitElement {
               ${filteredSceneKeys.map(scene => {
                 return html`
                   <div
-                    @mousedown=${this.handleMouseDown}
+                    @mousedown=${() => this.handleMouseDown(scene)}
                     @mouseup=${this.handleMouseUp}
                     @mouseleave=${this.handleMouseLeave}
-                    @touchstart=${this.handleTouchStart}
+                    @touchstart=${() => this.handleTouchStart(scene)}
                     @touchend=${this.handleTouchEnd}
                     @touchcancel=${this.handleTouchCancel}
                     @click=${() => this.hass.callService('donder_scenes', 'trigger', {scene: scene})}
@@ -455,8 +455,8 @@ export class BoilerplateCard extends LitElement {
     `
   }
 
-  protected handleMouseDown() {
-    this.startHoldTimer();
+  protected handleMouseDown(scene) {
+    this.startHoldTimer(scene);
   }
 
   protected handleMouseUp() {
@@ -467,8 +467,8 @@ export class BoilerplateCard extends LitElement {
     this.clearHoldTimer();
   }
 
-  protected handleTouchStart() {
-    this.startHoldTimer();
+  protected handleTouchStart(scene) {
+    this.startHoldTimer(scene);
   }
 
   protected handleTouchEnd() {
@@ -479,9 +479,9 @@ export class BoilerplateCard extends LitElement {
     this.clearHoldTimer();
   }
 
-  protected startHoldTimer() {
+  protected startHoldTimer(scene) {
     this.holdTimeout = setTimeout(() => {
-      // You can add any other logic you want to execute here.
+      this._toggleEditScene(scene)
     }, 1000); // 2000 ms = 2 seconds
   }
 
