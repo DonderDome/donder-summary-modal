@@ -165,6 +165,7 @@ export class BoilerplateCard extends LitElement {
         align-items: center;
         user-select: none; /* Prevents text selection while holding */
         touch-action: none; /* Prevents default touch actions like scrolling */
+        -webkit-user-select: none; /* Prevent text selection on mobile (Safari/Chrome) */
         padding: 20px;
       }
       .type-custom-donder-summary-modal {
@@ -432,11 +433,14 @@ export class BoilerplateCard extends LitElement {
               ${filteredSceneKeys.map(scene => {
                 return html`
                   <div
-                    @action=${(e) => this._handleSceneAction(e, scene)}
+                    @mousedown=${this.handleMouseDown}
+                    @mouseup=${this.handleMouseUp}
+                    @mouseleave=${this.handleMouseLeave}
+                    @touchstart=${this.handleTouchStart}
+                    @touchend=${this.handleTouchEnd}
+                    @touchcancel=${this.handleTouchCancel}
+                    @click=${() => this.hass.callService('donder_scenes', 'trigger', {scene: scene})}
                     class=${`scene ${scenes[scene].schedule ? 'schedule' : ''}`}
-                    .actionHandler=${actionHandler({
-                      hasHold: hasAction(this.config.hold_action),
-                    })}
                   >${scenes[scene].name}</div>
                 `
               })}
@@ -477,10 +481,8 @@ export class BoilerplateCard extends LitElement {
 
   protected startHoldTimer() {
     this.holdTimeout = setTimeout(() => {
-      console.log('Held for 2 seconds');
-      window.alert('Held for 2 seconds');
       // You can add any other logic you want to execute here.
-    }, 2000); // 2000 ms = 2 seconds
+    }, 1000); // 2000 ms = 2 seconds
   }
 
   protected clearHoldTimer() {
@@ -515,7 +517,7 @@ export class BoilerplateCard extends LitElement {
             })
         }
       </div>
-      <div
+      <!-- <div
         class="hold-div"
         @mousedown=${this.handleMouseDown}
         @mouseup=${this.handleMouseUp}
@@ -525,7 +527,7 @@ export class BoilerplateCard extends LitElement {
         @touchcancel=${this.handleTouchCancel}
       >
         Hold me for 2 seconds
-      </div>
+      </div> -->
       </ha-card>
     `;
   }
