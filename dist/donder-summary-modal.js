@@ -469,7 +469,7 @@ console.warn("The main 'lit-element' module entrypoint is deprecated. Please upd
               </div>
             </div>
           </div>`:null}
-    `}handleMouseDown(){this.startHoldTimer()}handleMouseUp(){this.clearHoldTimer()}handleMouseLeave(){this.clearHoldTimer()}handleTouchStart(){this.startHoldTimer()}handleTouchEnd(){this.clearHoldTimer()}handleTouchCancel(){this.clearHoldTimer()}startHoldTimer(){this.holdTimeout=setTimeout((()=>{console.log("Held for 2 seconds")}),2e3)}clearHoldTimer(){clearTimeout(this.holdTimeout)}render(){if(this.config.show_warning)return this._showWarning("warning message");if(this.config.show_error)return this._showError("error message");let t=null;return t=this.config.entities.reduce(((t,e)=>{var i;const{group:s}=e;return t[s]=null!==(i=t[s])&&void 0!==i?i:[],t[s].push(e),t}),{}),P`
+    `}handleMouseDown(){this.startHoldTimer()}handleMouseUp(){this.clearHoldTimer()}handleMouseLeave(){this.clearHoldTimer()}handleTouchStart(){this.startHoldTimer()}handleTouchEnd(){this.clearHoldTimer()}handleTouchCancel(){this.clearHoldTimer()}startHoldTimer(){this.holdTimeout=setTimeout((()=>{console.log("Held for 2 seconds"),window.alert("Held for 2 seconds")}),2e3)}clearHoldTimer(){clearTimeout(this.holdTimeout)}render(){if(this.config.show_warning)return this._showWarning("warning message");if(this.config.show_error)return this._showError("error message");let t=null;return t=this.config.entities.reduce(((t,e)=>{var i;const{group:s}=e;return t[s]=null!==(i=t[s])&&void 0!==i?i:[],t[s].push(e),t}),{}),P`
       <ha-card>
         <div class='donder-widget'>
         ${t?this.renderSwitchGroup(t):this.config.entities.map((t=>this.renderSwitch(t)))}

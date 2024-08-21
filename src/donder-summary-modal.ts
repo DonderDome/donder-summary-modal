@@ -478,6 +478,7 @@ export class BoilerplateCard extends LitElement {
   protected startHoldTimer() {
     this.holdTimeout = setTimeout(() => {
       console.log('Held for 2 seconds');
+      window.alert('Held for 2 seconds');
       // You can add any other logic you want to execute here.
     }, 2000); // 2000 ms = 2 seconds
   }
