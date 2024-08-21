@@ -366,7 +366,18 @@ export class BoilerplateCard extends LitElement {
     }
 
     if (action === 'tap') {
-      this.hass.callService('donder_scenes', 'trigger', {scene: scene})
+      // this.hass.callService('donder_scenes', 'trigger', {scene: scene})
+      this.hass.callService('browser_mod', 'popup', {
+        content: `Are you sure you want to trigger the ${scene} scene?`,
+        right_button: "Confirm",
+        right_button_action: {
+          service: 'donder_scenes.trigger',
+          data: {scene: scene}
+        },
+        left_button: "Close",
+        left_button_action: this.hass.callService('browser_mod', 'close_popup', {browser_id: localStorage.getItem('browser_mod-browser-id')}),
+        browser_id: localStorage.getItem('browser_mod-browser-id'),
+      })
     }
   }
 
