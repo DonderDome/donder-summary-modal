@@ -61,6 +61,8 @@ export class BoilerplateCard extends LitElement {
   @state() protected _current_scene = null;
   @state() protected _throttle = {};
   @state() protected _initiated = {};
+  @state() protected holdTimeout;
+
 
   public setConfig(config: BoilerplateCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
@@ -154,6 +156,17 @@ export class BoilerplateCard extends LitElement {
 
   static get styles(): CSSResultGroup {
     return css`
+      .hold-div {
+        width: 200px;
+        height: 100px;
+        background-color: lightblue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none; /* Prevents text selection while holding */
+        touch-action: none; /* Prevents default touch actions like scrolling */
+        padding: 20px;
+      }
       .type-custom-donder-summary-modal {
         background-color: transparent;
         background: transparent;
@@ -360,7 +373,7 @@ export class BoilerplateCard extends LitElement {
 
   protected _handleSceneAction(ev: ActionHandlerEvent, scene): void {
     const { action } = ev?.detail
-    console.log("event", action)
+
     if (action === 'hold') {
       this._toggleEditScene(scene)
     }
@@ -438,6 +451,42 @@ export class BoilerplateCard extends LitElement {
     `
   }
 
+  protected handleMouseDown() {
+    this.startHoldTimer();
+  }
+
+  protected handleMouseUp() {
+    this.clearHoldTimer();
+  }
+
+  protected handleMouseLeave() {
+    this.clearHoldTimer();
+  }
+
+  protected handleTouchStart() {
+    this.startHoldTimer();
+  }
+
+  protected handleTouchEnd() {
+    this.clearHoldTimer();
+  }
+
+  protected handleTouchCancel() {
+    this.clearHoldTimer();
+  }
+
+  protected startHoldTimer() {
+    this.holdTimeout = setTimeout(() => {
+      console.log('Held for 2 seconds');
+      // You can add any other logic you want to execute here.
+    }, 2000); // 2000 ms = 2 seconds
+  }
+
+  protected clearHoldTimer() {
+    clearTimeout(this.holdTimeout); // Clear the timeout if touch/mouse is released or canceled before 2 seconds
+  }
+
+
   protected render(): TemplateResult | void {
     if (this.config.show_warning) {
       return this._showWarning('warning message');
@@ -464,6 +513,17 @@ export class BoilerplateCard extends LitElement {
             return this.renderSwitch(e)
             })
         }
+      </div>
+      <div
+        class="hold-div"
+        @mousedown=${this.handleMouseDown}
+        @mouseup=${this.handleMouseUp}
+        @mouseleave=${this.handleMouseLeave}
+        @touchstart=${this.handleTouchStart}
+        @touchend=${this.handleTouchEnd}
+        @touchcancel=${this.handleTouchCancel}
+      >
+        Hold me for 2 seconds
       </div>
       </ha-card>
     `;
