@@ -491,7 +491,7 @@ export class BoilerplateCard extends LitElement {
   protected startHoldTimer(scene) {
     this.holdTimeout = setTimeout(() => {
       this._toggleEditScene(scene)
-    }, 1000); // 2000 ms = 2 seconds
+    }, 1000);
   }
 
   protected clearHoldTimer() {
