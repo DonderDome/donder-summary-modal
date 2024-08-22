@@ -272,7 +272,7 @@ export class BoilerplateCard extends LitElement {
         margin-top: 5px;
         position: relative;
       }
-      .scene::before {
+      /* .scene::before {
         content: " ";
         position: absolute;
         top: 0;
@@ -280,7 +280,7 @@ export class BoilerplateCard extends LitElement {
         width: 100%;
         height: 100%;
         z-index: 1000;
-      }
+      } */
       .scene.schedule::after {
         content: " ";
         position: absolute;
@@ -441,7 +441,7 @@ export class BoilerplateCard extends LitElement {
             <div class='summary-group-scenes'>
               ${filteredSceneKeys.map(scene => {
                 return html`
-                  <div
+                  <ha-card
                     @mousedown=${() => this.handleMouseDown(scene)}
                     @mouseup=${this.handleMouseUp}
                     @mouseleave=${this.handleMouseLeave}
@@ -450,7 +450,7 @@ export class BoilerplateCard extends LitElement {
                     @touchcancel=${this.handleTouchCancel}
                     @click=${() => this.hass.callService('donder_scenes', 'trigger', {scene: scene})}
                     class=${`scene ${scenes[scene].schedule ? 'schedule' : ''}`}
-                  >${scenes[scene].name}</div>
+                  >${scenes[scene].name}</ha-card>
                 `
               })}
               <div class="scene" @click=${() => this._toggleEditScene()}>
