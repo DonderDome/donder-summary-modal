@@ -274,25 +274,14 @@ export class BoilerplateCard extends LitElement {
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover/click effects */
       }
-
-      .hold-div:hover {
+      .scene:hover {
         background-color: deepskyblue; /* Change background on hover */
       }
-
-      .hold-div:active,
-      .hold-div:focus {
+      .scene:active,
+      .scene:focus {
         background-color: dodgerblue; /* Change background on click/touch */
         transform: scale(0.95); /* Slightly scale down on click/touch */
       }
-      /* .scene::before {
-        content: " ";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1000;
-      } */
       .scene.schedule::after {
         content: " ";
         position: absolute;
