@@ -259,7 +259,7 @@ export class BoilerplateCard extends LitElement {
         padding: 15px 22px;
         box-sizing: border-box;
         text-align: center;
-        border-radius: var(--scene-border-radius);
+        border-radius: 10px;
         font-size: 10px;
         text-transform: uppercase;
         display: flex;
@@ -275,12 +275,12 @@ export class BoilerplateCard extends LitElement {
         transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover/click effects */
       }
       .scene:hover {
-        background-color: deepskyblue; /* Change background on hover */
+        background-color: rgba(0, 0, 0, 0.1); /* Change background on hover */
       }
       .scene:active,
       .scene:focus {
-        background-color: dodgerblue; /* Change background on click/touch */
         transform: scale(0.95); /* Slightly scale down on click/touch */
+        -webkit-transform: scale(0.95); /* Slightly scale down on click/touch */
       }
       .scene.schedule::after {
         content: " ";
