@@ -163,9 +163,6 @@ export class BoilerplateCard extends LitElement {
         display: flex;
         justify-content: center;
         align-items: center;
-        user-select: none; /* Prevents text selection while holding */
-        touch-action: none; /* Prevents default touch actions like scrolling */
-        -webkit-user-select: none; /* Prevent text selection on mobile (Safari/Chrome) */
         padding: 20px;
       }
       .type-custom-donder-summary-modal {
@@ -271,6 +268,21 @@ export class BoilerplateCard extends LitElement {
         margin-right: 5px;
         margin-top: 5px;
         position: relative;
+        user-select: none; /* Prevents text selection while holding */
+        touch-action: none; /* Prevents default touch actions like scrolling */
+        -webkit-user-select: none; /* Prevent text selection on mobile (Safari/Chrome) */
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover/click effects */
+      }
+
+      .hold-div:hover {
+        background-color: deepskyblue; /* Change background on hover */
+      }
+
+      .hold-div:active,
+      .hold-div:focus {
+        background-color: dodgerblue; /* Change background on click/touch */
+        transform: scale(0.95); /* Slightly scale down on click/touch */
       }
       /* .scene::before {
         content: " ";
@@ -441,7 +453,7 @@ export class BoilerplateCard extends LitElement {
             <div class='summary-group-scenes'>
               ${filteredSceneKeys.map(scene => {
                 return html`
-                  <ha-card
+                  <div
                     @mousedown=${() => this.handleMouseDown(scene)}
                     @mouseup=${this.handleMouseUp}
                     @mouseleave=${this.handleMouseLeave}
@@ -450,7 +462,7 @@ export class BoilerplateCard extends LitElement {
                     @touchcancel=${this.handleTouchCancel}
                     @click=${() => this.hass.callService('donder_scenes', 'trigger', {scene: scene})}
                     class=${`scene ${scenes[scene].schedule ? 'schedule' : ''}`}
-                  >${scenes[scene].name}</ha-card>
+                  >${scenes[scene].name}</div>
                 `
               })}
               <div class="scene" @click=${() => this._toggleEditScene()}>
